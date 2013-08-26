@@ -1,0 +1,23 @@
+parameters:
+    ite_js.sf.class:                                        ITE\JsBundle\Service\SF
+    ite_js.kernel_listener.class:                           ITE\JsBundle\EventListener\KernelListener
+
+    ite_js.twig.sf_extension.class:                         ITE\JsBundle\Twig\Extension\SFExtension
+
+services:
+    ite_js.sf:
+        class:                                              %ite_js.sf.class%
+        arguments: [ @service_container ]
+
+    ite_js.kernel_listener:
+        class:                                              %ite_js.kernel_listener.class%
+        arguments: [ @ite_js.sf ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -255 }
+            - { name: kernel.event_listener, event: kernel.view, method: onKernelView, priority: 256 }
+
+    ite_js.twig.sf_extension:
+        class:                                              %ite_js.twig.sf_extension.class%
+        arguments: [ @ite_js.sf ]
+        tags:
+            - { name: twig.extension }
