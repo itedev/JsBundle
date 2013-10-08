@@ -1,0 +1,3 @@
+{% macro var(var, id) %}
+    <span style="display:none;" id="{{ id }}">{{- var|json_encode|e('html') -}}</span>
+{% endmacro %}
