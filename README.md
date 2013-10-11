@@ -9,7 +9,7 @@ Configuration
 ```yml
 # app/config/config.yml
 ite_js:
-    flashes_selector:     #flashes
+    flashes_selector:     '#flashes'
 ```    
 
 Service 'ite_js.sf'
