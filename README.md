@@ -62,7 +62,7 @@ and register it as a service:
 ```   
 After that you can get neede extension in this way:
 ``` php
-$container->get('ite_js.sf')->getExtension('form');
+$container->get('ite_js.sf')->getExtension('test');
 ```
 
     
