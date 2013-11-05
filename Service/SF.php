@@ -13,6 +13,10 @@ use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
+/**
+ * Class SF
+ * @package ITE\JsBundle\Service
+ */
 class SF implements SFInterface
 {
     /**
@@ -41,10 +45,7 @@ class SF implements SFInterface
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-
         $this->parameterBag = new ParameterBag();
-
-        $this->initializeParameters();
     }
 
     /**
@@ -87,6 +88,7 @@ class SF implements SFInterface
         if (!$this->hasExtension($extensionName)) {
             throw new InvalidArgumentException();
         }
+
         return $this->extensions[$extensionName];
     }
 
@@ -95,8 +97,9 @@ class SF implements SFInterface
      */
     public function dump()
     {
-        $dump = '';
+        $this->initializeParameters();
 
+        $dump = '';
         $dump .= 'SF.parameters.add(' . json_encode($this->parameterBag->all()) . ');';
 
         foreach ($this->extensions as $extension) {
@@ -143,10 +146,11 @@ class SF implements SFInterface
     protected function initializeParameters()
     {
         $this->parameterBag->add(array(
-           'environment' => $this->container->getParameter('kernel.environment'),
-           'debug' => $this->container->getParameter('kernel.debug'),
-           'locale' => $this->container->getParameter('locale'),
-           'flashes_selector' => $this->container->getParameter('ite_js.flashes_selector'),
+            'environment' => $this->container->getParameter('kernel.environment'),
+            'debug' => $this->container->getParameter('kernel.debug'),
+            'locale' => $this->container->getParameter('locale'),
+            'route' => $this->container->get('request')->get('_route'),
+            'flashes_selector' => $this->container->getParameter('ite_js.flashes_selector'),
         ));
     }
 
