@@ -1,10 +1,14 @@
 <?php
 
-namespace ITE\JsBundle\Service;
+namespace ITE\JsBundle\SF;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
+/**
+ * Interface SFExtensionInterface
+ * @package ITE\JsBundle\SF
+ */
 interface SFExtensionInterface
 {
     /**

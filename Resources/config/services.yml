@@ -1,5 +1,5 @@
 parameters:
-    ite_js.sf.class:                                        ITE\JsBundle\Service\SF
+    ite_js.sf.class:                                        ITE\JsBundle\SF\SF
     ite_js.kernel_listener.class:                           ITE\JsBundle\EventListener\KernelListener
 
     ite_js.twig.sf_extension.class:                         ITE\JsBundle\Twig\Extension\SFExtension

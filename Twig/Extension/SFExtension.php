@@ -2,7 +2,7 @@
 
 namespace ITE\JsBundle\Twig\Extension;
 
-use ITE\JsBundle\Service\SFInterface;
+use ITE\JsBundle\SF\SFInterface;
 use Twig_Environment;
 use Twig_Extension;
 use Symfony\Component\Locale\Locale;

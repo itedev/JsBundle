@@ -6,6 +6,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Class SFCompilerPass
+ * @package ITE\JsBundle\DependencyInjection\Compiler
+ */
 class SFCompilerPass implements CompilerPassInterface
 {
     /**

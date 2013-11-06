@@ -1,6 +1,6 @@
 <?php
 
-namespace ITE\JsBundle\Service;
+namespace ITE\JsBundle\SF;
 
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
+/**
+ * Interface SFInterface
+ * @package ITE\JsBundle\SF
+ */
 interface SFInterface
 {
     /**
