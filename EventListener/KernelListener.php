@@ -2,7 +2,7 @@
 
 namespace ITE\JsBundle\EventListener;
 
-use ITE\JsBundle\Service\SFInterface;
+use ITE\JsBundle\SF\SFInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
