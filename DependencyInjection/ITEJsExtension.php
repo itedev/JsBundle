@@ -23,7 +23,7 @@ class ITEJsExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader->load('sf.yml');
 
         $container->setParameter('ite_js.flashes_selector', $config['flashes_selector']);
     }

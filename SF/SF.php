@@ -1,6 +1,6 @@
 <?php
 
-namespace ITE\JsBundle\Service;
+namespace ITE\JsBundle\SF;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
  * Class SF
- * @package ITE\JsBundle\Service
+ * @package ITE\JsBundle\SF
  */
 class SF implements SFInterface
 {
@@ -107,7 +107,7 @@ class SF implements SFInterface
             $dump .= $extension->dump();
         }
 
-        return '<script>/*<![CDATA[*/ (function($){$(document).ready(function(){' . $dump . '});})(jQuery); /*]]>*/</script>';
+        return '<script>/*<![CDATA[*/ ' . $dump . ' /*]]>*/</script>';
     }
 
     /**
