@@ -107,7 +107,7 @@ class SF implements SFInterface
             $dump .= $extension->dump();
         }
 
-        return '<script>/*<![CDATA[*/ (function($){$(document).ready(function(){' . $dump . '});})(jQuery); /*]]>*/</script>';
+        return '<script>/*<![CDATA[*/ ' . $dump . ' /*]]>*/</script>';
     }
 
     /**
