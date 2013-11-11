@@ -122,9 +122,11 @@
   var SF = function() {
     this.parameters = new ParameterBag();
     this.flashes = new FlashBag();
+    this.util = {};
+    this.ui = {};
   };
 
-  SF.prototype = {
+  SF.prototype.ui = {
     renderFlashes: function(flashes, selector) {
       selector = selector || this.parameters.get('flashes_selector');
       flashes = flashes || this.flashes.all();
@@ -177,7 +179,7 @@
     var flashesHeader = xhr.getResponseHeader('X-SF-Flashes');
     if (flashesHeader) {
       var flashes = $.parseJSON(flashesHeader);
-      SF.renderFlashes(flashes);
+      SF.ui.renderFlashes(flashes);
     }
   });
 
