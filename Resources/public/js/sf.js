@@ -124,6 +124,10 @@
     this.flashes = new FlashBag();
     this.util = {};
     this.ui = {};
+    this.classes = {
+      ParameterBag: ParameterBag,
+      FlashBag: FlashBag
+    };
   };
 
   SF.prototype.ui = {
