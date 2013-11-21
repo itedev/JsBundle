@@ -124,6 +124,11 @@
     this.flashes = new FlashBag();
     this.util = {};
     this.callbacks = {};
+    this.ui = {};
+    this.classes = {
+      ParameterBag: ParameterBag,
+      FlashBag: FlashBag
+    };
   };
 
   SF.prototype = {
