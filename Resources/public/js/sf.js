@@ -123,6 +123,7 @@
     this.parameters = new ParameterBag();
     this.flashes = new FlashBag();
     this.util = {};
+    this.callbacks = {};
     this.ui = {};
     this.classes = {
       ParameterBag: ParameterBag,
@@ -130,33 +131,36 @@
     };
   };
 
-  SF.prototype.ui = {
-    renderFlashes: function(flashes, selector) {
-      selector = selector || this.parameters.get('flashes_selector');
-      flashes = flashes || this.flashes.all();
-      var template = _.template(
-        '<div class="sf-flash alert alert-<%= type %> fade in alert-block">' +
-          '<a class="close" data-dismiss="alert" href="#">×</a>' +
-          '<%= message %>' +
-          '</div>'
-      );
+  SF.prototype = {
+    ui : {
+      renderFlashes: function(flashes, selector) {
+        var _SF = window.SF;
+        selector = selector || _SF.parameters.get('flashes_selector');
+        flashes = flashes || _SF.flashes.all();
+        var template = _.template(
+          '<div class="sf-flash alert alert-<%= type %> fade in alert-block">' +
+            '<a class="close" data-dismiss="alert" href="#">×</a>' +
+            '<%= message %>' +
+            '</div>'
+        );
 
-      $.each(flashes, function(type, messages) {
-        $.each(messages, function(i, message) {
-          $(selector).append(template({
-            type: type,
-            message: message.message
-          }));
-        })
-      });
+        $.each(flashes, function(type, messages) {
+          $.each(messages, function(i, message) {
+            $(selector).append(template({
+              type: type,
+              message: message.message
+            }));
+          })
+        });
 
-      $('html, body').animate({
-        scrollTop: 0
-      }, 1000);
-    },
+        $('html, body').animate({
+          scrollTop: 0
+        }, 1000);
+      },
 
-    clearFlashes: function(selector) {
-      $('.sf-flash', selector).remove();
+      clearFlashes: function(selector) {
+        $('.sf-flash', selector).remove();
+      }
     }
   };
 
