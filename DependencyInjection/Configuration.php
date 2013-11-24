@@ -22,6 +22,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('templates')
+                    ->defaultValue(array())
+                    ->prototype('scalar')
+                    ->end()
+                ->end()
                 ->scalarNode('flashes_selector')->defaultNull()->end()
             ->end()
         ->end();
