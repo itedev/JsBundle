@@ -1,16 +1,18 @@
-JsBundle
-========
+ITEJsBundle
+===========
 
-Add ite_js.sf service in symfony 2 and global SF object in javascript.
+Creates global JavaScript object and provide tools for making the bridge between Symfony 2 and JavaScript.
 
 Configuration
 -------------
 
+To allow SF service's extensions modify stylesheets and javascripts, you need to set logical names of your base templates:
+
 ```yml
 # app/config/config.yml
 ite_js:
-    flashes_selector:     '#flashes'
-```    
+    templates: [ '::base.html.twig' ] # possible formats: '::baz.html.twig', 'AcmeDemoBundle::baz.html.twig', 'AcmeDemoBundle:foo:baz.html.twig', 'AcmeDemoBundle:foo/bar:baz.html.twig' and so on.
+```
 
 Service 'ite_js.sf'
 -------------------
@@ -60,7 +62,7 @@ and register it as a service:
         tags:
             - { name: ite_js.sf.extension, alias: test }
 ```   
-After that you can get neede extension in this way:
+After that you can get needed extension in this way:
 ``` php
 $container->get('ite_js.sf')->getExtension('test');
 ```

@@ -1,7 +1,7 @@
 {
   "name": "ite/js-bundle",
   "type": "symfony-bundle",
-  "description": "Creates global JavaScript object and provide tools for making the bridge between Symfony 2 and JavaScript",
+  "description": "Creates global JavaScript object and provide tools for making the bridge between Symfony 2 and JavaScript.",
   "keywords": ["javascript", "jquery"],
   "license": "MIT",
   "authors": [
