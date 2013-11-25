@@ -119,24 +119,35 @@
   FlashBag.prototype.fn = FlashBag.prototype;
 
   // SF
-  var SF = function() {
-    this.parameters = new ParameterBag();
-    this.flashes = new FlashBag();
-    this.util = {};
-    this.callbacks = {};
-    this.ui = {};
-    this.classes = {
-      ParameterBag: ParameterBag,
-      FlashBag: FlashBag
-    };
-  };
+  var SF = function() {};
 
   SF.prototype = {
+    parameters: new ParameterBag(),
+    flashes: new FlashBag(),
+    util: {
+      processXhr: function(xhr, settings) {
+        var flashesHeader = xhr.getResponseHeader('X-SF-Flashes');
+        if (flashesHeader) {
+          var flashes = $.parseJSON(flashesHeader);
+          window.SF.ui.renderFlashes(flashes);
+        }
+
+        var parametersHeader = xhr.getResponseHeader('X-SF-Parameters');
+        if (parametersHeader) {
+          var parameters = $.parseJSON(parametersHeader);
+          window.SF.parameters.add(parameters);
+        }
+      }
+    },
+    callbacks: {},
+    classes: {
+      ParameterBag: ParameterBag,
+      FlashBag: FlashBag
+    },
     ui : {
       renderFlashes: function(flashes, selector) {
-        var _SF = window.SF;
-        selector = selector || _SF.parameters.get('flashes_selector');
-        flashes = flashes || _SF.flashes.all();
+        selector = selector || window.SF.parameters.get('flashes_selector');
+        flashes = flashes || window.SF.flashes.all();
         var template = _.template(
           '<div class="sf-flash alert alert-<%= type %> fade in alert-block">' +
             '<a class="close" data-dismiss="alert" href="#">×</a>' +
@@ -164,8 +175,6 @@
     }
   };
 
-  SF.prototype.fn = SF.prototype;
-
   /**
    * Add alias for FOSJsRoutingBundle Routing.generate method
    */
@@ -174,6 +183,8 @@
       return Routing.generate(route, parameters, absolute);
     };
   }
+
+  SF.prototype.fn = SF.prototype;
 
   window.SF = new SF();
 
@@ -184,11 +195,7 @@
   });
 
   $(document).ajaxComplete(function(event, xhr, settings) {
-    var flashesHeader = xhr.getResponseHeader('X-SF-Flashes');
-    if (flashesHeader) {
-      var flashes = $.parseJSON(flashesHeader);
-      SF.ui.renderFlashes(flashes);
-    }
+    window.SF.util.processXhr(xhr, settings);
   });
 
 })(jQuery);

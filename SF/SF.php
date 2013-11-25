@@ -162,6 +162,10 @@ class SF implements SFInterface
             $response->headers->set('X-SF-Flashes', json_encode($this->flashes));
         }
 
+        if ($this->parameterBag->count()) {
+            $response->headers->set('X-SF-Parameters', json_encode($this->parameterBag->all()));
+        }
+
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
             $extension->onKernelResponse($event);
