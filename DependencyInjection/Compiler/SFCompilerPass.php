@@ -21,14 +21,9 @@ class SFCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $definition = $container->getDefinition(
-            'ite_js.sf'
-        );
+        $definition = $container->getDefinition('ite_js.sf');
 
-        $taggedServices = $container->findTaggedServiceIds(
-            'ite_js.sf.extension'
-        );
-
+        $taggedServices = $container->findTaggedServiceIds('ite_js.sf.extension');
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
                 $definition->addMethodCall(
