@@ -24,7 +24,6 @@ class ITEJsExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        $container->setParameter('ite_js.templates', $config['templates']);
         $container->setParameter('ite_js.flashes_selector', $config['flashes_selector']);
 
         $loader->load('sf.yml');

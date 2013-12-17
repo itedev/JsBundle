@@ -3,7 +3,6 @@
 namespace ITE\JsBundle\Twig\Extension;
 
 use Assetic\Factory\AssetFactory;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use ITE\JsBundle\Twig\TokenParser\AsseticTokenParser;
 use Assetic\ValueSupplierInterface;
@@ -15,14 +14,9 @@ use Symfony\Bundle\AsseticBundle\Twig\AsseticExtension as BaseAsseticExtension;
  */
 class AsseticExtension extends BaseAsseticExtension
 {
-    private $useController;
-    private $templateNameParser;
-    private $enabledBundles;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
+    protected $useController;
+    protected $templateNameParser;
+    protected $enabledBundles;
 
     /**
      * @inheritdoc
@@ -34,14 +28,6 @@ class AsseticExtension extends BaseAsseticExtension
         $this->enabledBundles = $enabledBundles;
 
         parent::__construct($factory, $templateNameParser, $useController, $functions, $enabledBundles, $valueSupplier);
-    }
-
-    /**
-     * @param EventDispatcherInterface $dispatcher
-     */
-    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -64,7 +50,6 @@ class AsseticExtension extends BaseAsseticExtension
         $tokenParser = new AsseticTokenParser($this->factory, $tag, $output, $single, array('package'));
         $tokenParser->setTemplateNameParser($this->templateNameParser);
         $tokenParser->setEnabledBundles($this->enabledBundles);
-        $tokenParser->setEventDispatcher($this->dispatcher);
 
         return $tokenParser;
     }

@@ -35,16 +35,14 @@ interface SFInterface
     public function getExtension($extensionName);
 
     /**
-     * @param array $inputs
      * @return array
      */
-    public function modifyStylesheets(array $inputs);
+    public function addStylesheets();
 
     /**
-     * @param array $inputs
      * @return array
      */
-    public function modifyJavascripts(array $inputs);
+    public function addJavascripts();
 
     /**
      * @return string

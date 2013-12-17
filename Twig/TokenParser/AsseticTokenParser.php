@@ -4,9 +4,6 @@ namespace ITE\JsBundle\Twig\TokenParser;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Factory\AssetFactory;
-use ITE\JsBundle\EventListener\Event\FilterAssetEvent;
-use ITE\JsBundle\EventListener\Event\SFEvents;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Bundle\AsseticBundle\Exception\InvalidBundleException;
 use Symfony\Bundle\AsseticBundle\Twig\AsseticNode;
@@ -23,10 +20,6 @@ class AsseticTokenParser extends BaseAsseticTokenParser
     private $single;
     private $extensions;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
     private $templateNameParser;
     private $enabledBundles;
 
@@ -41,14 +34,6 @@ class AsseticTokenParser extends BaseAsseticTokenParser
         $this->extensions = $extensions;
 
         parent::__construct($factory, $tag, $output, $output, $extensions);
-    }
-
-    /**
-     * @param EventDispatcherInterface $dispatcher
-     */
-    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -112,6 +97,11 @@ class AsseticTokenParser extends BaseAsseticTokenParser
             if ($stream->test(\Twig_Token::STRING_TYPE)) {
                 // '@jquery', 'js/src/core/*', 'js/src/extra.js'
                 $inputs[] = $stream->next()->getValue();
+            } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'ite_js_sf_assets')) {
+                // ite_js_sf_assets()
+                $expression = $this->parser->getExpressionParser()->parseExpression();
+                $this->parser->getEnvironment()->compile($expression);
+                $inputs = array_merge($inputs, call_user_func($expression->getAttribute('callable'), $token->getValue()));
             } elseif ($stream->test(\Twig_Token::NAME_TYPE, 'filter')) {
                 // filter='yui_js'
                 $stream->next();
@@ -180,8 +170,6 @@ class AsseticTokenParser extends BaseAsseticTokenParser
             $inputs = array_slice($inputs, -1);
         }
 
-        $inputs = $this->modifyInputs($stream->getFilename(), $token->getValue(), $inputs);
-
         if (!$name) {
             $name = $this->factory->generateAssetName($inputs, $filters, $attributes);
         }
@@ -199,18 +187,4 @@ class AsseticTokenParser extends BaseAsseticTokenParser
         return new AsseticNode($asset, $body, $inputs, $filters, $name, $attributes, $lineno, $tag);
     }
 
-    /**
-     * @param $filename
-     * @param $tag
-     * @param array $inputs
-     * @return array
-     */
-    protected function modifyInputs($filename, $tag, array $inputs)
-    {
-        if (!in_array($tag, array('stylesheets', 'javascripts')) || !is_string($filename)) {
-            return $inputs;
-        }
-
-        return $this->dispatcher->dispatch(SFEvents::MODIFY_ASSETS, new FilterAssetEvent($filename, $tag, $inputs))->getInputs();
-    }
 }

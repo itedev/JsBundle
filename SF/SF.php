@@ -93,28 +93,28 @@ class SF implements SFInterface
     }
 
     /**
-     * @param array $inputs
      * @return array
      */
-    public function modifyStylesheets(array $inputs)
+    public function addStylesheets()
     {
+        $inputs = array();
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
-            $extension->modifyStylesheets($inputs);
+            $inputs = array_merge($inputs, $extension->addStylesheets());
         }
 
         return $inputs;
     }
 
     /**
-     * @param array $inputs
      * @return array
      */
-    public function modifyJavascripts(array $inputs)
+    public function addJavascripts()
     {
+        $inputs = array();
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
-            $extension->modifyJavascripts($inputs);
+            $inputs = array_merge($inputs, $extension->addJavascripts());
         }
 
         return $inputs;

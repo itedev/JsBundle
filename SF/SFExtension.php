@@ -13,21 +13,19 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 class SFExtension implements SFExtensionInterface
 {
     /**
-     * @param array $inputs
      * @return array
      */
-    public function modifyStylesheets(array &$inputs)
+    public function addStylesheets()
     {
-        return $inputs;
+        return array();
     }
 
     /**
-     * @param array $inputs
      * @return array
      */
-    public function modifyJavascripts(array &$inputs)
+    public function addJavascripts()
     {
-        return $inputs;
+        return array();
     }
 
     /**
