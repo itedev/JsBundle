@@ -4,6 +4,7 @@ parameters:
 
     ite_js.twig.sf_extension.class:                         ITE\JsBundle\Twig\Extension\SFExtension
 
+    assetic.filter.cssrewrite.class:                        ITE\JsBundle\Filter\CssRewriteFilter
     assetic.twig_extension.class:                           ITE\JsBundle\Twig\Extension\AsseticExtension
 
 services:
@@ -23,6 +24,12 @@ services:
         arguments: [ @ite_js.sf ]
         tags:
             - { name: twig.extension }
+
+    assetic.filter.cssrewrite:
+        class:                                              %assetic.filter.cssrewrite.class%
+        arguments: [ @kernel ]
+        tags:
+            - { name: assetic.filter, alias: cssrewrite }
 
     assetic.twig_extension:
         class:                                              %assetic.twig_extension.class%
