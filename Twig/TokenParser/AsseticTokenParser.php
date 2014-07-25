@@ -16,6 +16,7 @@ use Assetic\Extension\Twig\AsseticTokenParser as BaseAsseticTokenParser;
 class AsseticTokenParser extends BaseAsseticTokenParser
 {
     private $factory;
+    private $tag;
     private $output;
     private $single;
     private $extensions;
@@ -29,11 +30,12 @@ class AsseticTokenParser extends BaseAsseticTokenParser
     public function __construct(AssetFactory $factory, $tag, $output, $single = false, array $extensions = array())
     {
         $this->factory = $factory;
+        $this->tag = $tag;
         $this->output = $output;
         $this->single = $single;
         $this->extensions = $extensions;
 
-        parent::__construct($factory, $tag, $output, $output, $extensions);
+        parent::__construct($factory, $tag, $output, $single, $extensions);
     }
 
     /**
