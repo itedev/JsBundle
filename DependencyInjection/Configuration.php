@@ -2,13 +2,13 @@
 
 namespace ITE\JsBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * This is the class that validates and merges configuration from your app/config files
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ * Class Configuration
+ * @package ITE\JsBundle\DependencyInjection
  */
 class Configuration implements ConfigurationInterface
 {
@@ -20,16 +20,27 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ite_js');
 
-        $rootNode
-            ->children()
-                ->scalarNode('flashes_selector')->defaultNull()->end()
-            ->end()
-        ->end();
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $this->addAsseticConfiguration($rootNode);
 
         return $treeBuilder;
+    }
+
+    /**
+     * @param ArrayNodeDefinition $rootNode
+     */
+    protected function addAsseticConfiguration(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('assetic')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('cssrewrite')
+                            ->canBeEnabled()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }

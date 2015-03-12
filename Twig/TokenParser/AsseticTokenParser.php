@@ -25,7 +25,7 @@ class AsseticTokenParser extends BaseAsseticTokenParser
     private $enabledBundles;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(AssetFactory $factory, $tag, $output, $single = false, array $extensions = array())
     {
@@ -39,7 +39,7 @@ class AsseticTokenParser extends BaseAsseticTokenParser
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setTemplateNameParser(TemplateNameParserInterface $templateNameParser)
     {
@@ -47,7 +47,7 @@ class AsseticTokenParser extends BaseAsseticTokenParser
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setEnabledBundles(array $enabledBundles = null)
     {
@@ -55,7 +55,7 @@ class AsseticTokenParser extends BaseAsseticTokenParser
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function parse(\Twig_Token $token)
     {
@@ -81,7 +81,7 @@ class AsseticTokenParser extends BaseAsseticTokenParser
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function parentParse(\Twig_Token $token)
     {
@@ -182,7 +182,7 @@ class AsseticTokenParser extends BaseAsseticTokenParser
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createNode(AssetInterface $asset, \Twig_NodeInterface $body, array $inputs, array $filters, $name, array $attributes = array(), $lineno = 0, $tag = null)
     {

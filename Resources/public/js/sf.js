@@ -144,43 +144,19 @@
       ParameterBag: ParameterBag,
       FlashBag: FlashBag
     },
-    ui : {
-      renderFlashes: function(flashes, selector) {
-        selector = selector || window.SF.parameters.get('flashes_selector');
-        flashes = flashes || window.SF.flashes.all();
-        var template = _.template(
-          '<div class="sf-flash alert alert-<%= type %> fade in alert-block">' +
-            '<a class="close" data-dismiss="alert" href="#">×</a>' +
-            '<%= message %>' +
-            '</div>'
-        );
-
-        $.each(flashes, function(type, messages) {
-          $.each(messages, function(i, message) {
-            $(selector).append(template({
-              type: type,
-              message: message.message
-            }));
-          })
-        });
-
-        $('html, body').animate({
-          scrollTop: 0
-        }, 1000);
-      },
-
-      clearFlashes: function(selector) {
-        $('.sf-flash', selector).remove();
-      }
-    }
+    ui : {}
   };
 
   /**
-   * Add alias for FOSJsRoutingBundle Routing.generate method
+   * Add aliases for FOSJsRoutingBundle Routing.generate method
    */
   if ('undefined' !== typeof window['Routing']) {
-    SF.prototype.path = function(route, parameters, absolute) {
-      return Routing.generate(route, parameters, absolute);
+    SF.prototype.path = function(route, parameters) {
+      return Routing.generate(route, parameters, false);
+    };
+
+    SF.prototype.url = function(route, parameters) {
+      return Routing.generate(route, parameters, true);
     };
   }
 

@@ -31,15 +31,15 @@ class SFExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('ite_js_sf_dump', array($this, 'sfDump'), array('pre_escape' => 'html', 'is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ite_js_sf_assets', array($this, 'sfAssets')),
+            new \Twig_SimpleFunction('ite_js_sf_dump', array($this, 'dump'), array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ite_js_sf_assets', array($this, 'assets')),
         );
     }
 
     /**
      * @return string
      */
-    public function sfDump()
+    public function dump()
     {
         return $this->sf->dump();
     }
@@ -48,7 +48,7 @@ class SFExtension extends Twig_Extension
      * @param $type
      * @return array
      */
-    public function sfAssets($type)
+    public function assets($type)
     {
         if ('stylesheets' === $type) {
             return $this->sf->addStylesheets();

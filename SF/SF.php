@@ -20,14 +20,14 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 class SF implements SFInterface
 {
     /**
+     * @var ParameterBagInterface
+     */
+    public $parameters;
+
+    /**
      * @var ContainerInterface
      */
     protected $container;
-
-    /**
-     * @var ParameterBagInterface
-     */
-    protected $parameterBag;
 
     /**
      * @var array $flashes
@@ -45,51 +45,43 @@ class SF implements SFInterface
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->parameterBag = new ParameterBag();
+        $this->parameters = new ParameterBag();
     }
 
     /**
-     * @return ParameterBagInterface
-     */
-    public function getParameterBag()
-    {
-        return $this->parameterBag;
-    }
-
-    /**
-     * @param $extensionName
+     * @param $name
      * @return bool
      */
-    public function hasExtension($extensionName)
+    public function hasExtension($name)
     {
-        return array_key_exists($extensionName, $this->extensions);
+        return array_key_exists($name, $this->extensions);
     }
 
     /**
-     * @param $extensionName
+     * @param $name
      * @param SFExtensionInterface $extension
      * @return SFInterface
      */
-    public function addExtension($extensionName, SFExtensionInterface $extension)
+    public function addExtension($name, SFExtensionInterface $extension)
     {
-        if (!$this->hasExtension($extensionName)) {
-            $this->extensions[$extensionName] = $extension;
+        if (!$this->hasExtension($name)) {
+            $this->extensions[$name] = $extension;
         }
         return $this;
     }
 
     /**
-     * @param $extensionName
+     * @param $name
      * @return SFExtensionInterface
      * @throws InvalidArgumentException
      */
-    public function getExtension($extensionName)
+    public function getExtension($name)
     {
-        if (!$this->hasExtension($extensionName)) {
+        if (!$this->hasExtension($name)) {
             throw new InvalidArgumentException();
         }
 
-        return $this->extensions[$extensionName];
+        return $this->extensions[$name];
     }
 
     /**
@@ -128,7 +120,7 @@ class SF implements SFInterface
         $this->initializeParameters();
 
         $dump = '';
-        $dump .= 'SF.parameters.add(' . json_encode($this->parameterBag->all()) . ');';
+        $dump .= 'SF.parameters.add(' . json_encode($this->parameters->all()) . ');';
 
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
@@ -141,7 +133,7 @@ class SF implements SFInterface
     /**
      * @param GetResponseForControllerResultEvent $event
      */
-    public function onKernelView(GetResponseForControllerResultEvent $event)
+    public function onAjaxRequest(GetResponseForControllerResultEvent $event)
     {
         $this->collectFlashes();
 
@@ -154,7 +146,7 @@ class SF implements SFInterface
     /**
      * @param FilterResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onAjaxResponse(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
 
@@ -162,8 +154,8 @@ class SF implements SFInterface
             $response->headers->set('X-SF-Flashes', json_encode($this->flashes));
         }
 
-        if ($this->parameterBag->count()) {
-            $response->headers->set('X-SF-Parameters', json_encode($this->parameterBag->all()));
+        if ($this->parameters->count()) {
+            $response->headers->set('X-SF-Parameters', json_encode($this->parameters->all()));
         }
 
         foreach ($this->extensions as $extension) {
@@ -177,12 +169,11 @@ class SF implements SFInterface
      */
     protected function initializeParameters()
     {
-        $this->parameterBag->add(array(
+        $this->parameters->add(array(
             'environment' => $this->container->getParameter('kernel.environment'),
             'debug' => $this->container->getParameter('kernel.debug'),
             'locale' => $this->container->getParameter('locale'),
             'route' => $this->container->get('request')->get('_route'),
-            'flashes_selector' => $this->container->getParameter('ite_js.flashes_selector'),
         ));
     }
 

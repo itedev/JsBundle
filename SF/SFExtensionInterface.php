@@ -29,10 +29,10 @@ interface SFExtensionInterface
     /**
      * @param GetResponseForControllerResultEvent $event
      */
-    public function onKernelView(GetResponseForControllerResultEvent $event);
+    public function onAjaxRequest(GetResponseForControllerResultEvent $event);
 
     /**
      * @param FilterResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event);
+    public function onAjaxResponse(FilterResponseEvent $event);
 }

@@ -1,40 +1,23 @@
 parameters:
-    ite_js.sf.class:                                        ITE\JsBundle\SF\SF
-    ite_js.kernel_listener.class:                           ITE\JsBundle\EventListener\KernelListener
-
-    ite_js.twig.sf_extension.class:                         ITE\JsBundle\Twig\Extension\SFExtension
-
-    assetic.filter.cssrewrite.class:                        ITE\JsBundle\Filter\CssRewriteFilter
-    assetic.twig_extension.class:                           ITE\JsBundle\Twig\Extension\AsseticExtension
+    ite_js.sf.class:                ITE\JsBundle\SF\SF
+    ite_js.kernel_listener.class:   ITE\JsBundle\EventListener\KernelListener
+    ite_js.twig.sf_extension.class: ITE\JsBundle\Twig\Extension\SFExtension
 
 services:
     ite_js.sf:
-        class:                                              %ite_js.sf.class%
-        arguments: [ @service_container ]
+        class: %ite_js.sf.class%
+        arguments: [@service_container]
 
     ite_js.kernel_listener:
-        class:                                              %ite_js.kernel_listener.class%
-        arguments: [ @ite_js.sf ]
+        class: %ite_js.kernel_listener.class%
+        arguments: [@ite_js.sf]
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -255 }
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView, priority: 256 }
 
     ite_js.twig.sf_extension:
-        class:                                              %ite_js.twig.sf_extension.class%
-        arguments: [ @ite_js.sf ]
+        class: %ite_js.twig.sf_extension.class%
+        arguments: [@ite_js.sf]
         tags:
             - { name: twig.extension }
 
-    assetic.filter.cssrewrite:
-        class:                                              %assetic.filter.cssrewrite.class%
-        arguments: [ @kernel ]
-        tags:
-            - { name: assetic.filter, alias: cssrewrite }
-
-    assetic.twig_extension:
-        class:                                              %assetic.twig_extension.class%
-        public: false
-        arguments: [ @assetic.asset_factory, @templating.name_parser, %assetic.use_controller%, %assetic.twig_extension.functions%, %assetic.bundles%, @?assetic.value_supplier ]
-        tags:
-            - { name: twig.extension }
-            - { name: assetic.templating.twig }

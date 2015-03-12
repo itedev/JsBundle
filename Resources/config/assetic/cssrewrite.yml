@@ -1,0 +1,9 @@
+parameters:
+    assetic.filter.cssrewrite.class: ITE\JsBundle\Assetic\Filter\CssRewriteFilter
+
+services:
+    assetic.filter.cssrewrite:
+        class: %assetic.filter.cssrewrite.class%
+        arguments: [ @kernel ]
+        tags:
+            - { name: assetic.filter, alias: cssrewrite }

@@ -7,10 +7,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class SFCompilerPass
+ * Class SFExtensionPass
  * @package ITE\JsBundle\DependencyInjection\Compiler
  */
-class SFCompilerPass implements CompilerPassInterface
+class SFExtensionPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
@@ -26,10 +26,7 @@ class SFCompilerPass implements CompilerPassInterface
         $taggedServices = $container->findTaggedServiceIds('ite_js.sf.extension');
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
-                $definition->addMethodCall(
-                    'addExtension',
-                    array($attributes['alias'], new Reference($id))
-                );
+                $definition->addMethodCall('addExtension', array($attributes['alias'], new Reference($id)));
             }
         }
     }

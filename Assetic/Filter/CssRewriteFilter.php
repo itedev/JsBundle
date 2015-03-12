@@ -1,6 +1,6 @@
 <?php
 
-namespace ITE\JsBundle\Filter;
+namespace ITE\JsBundle\Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
 use Assetic\Filter\CssRewriteFilter as BaseCssRewriteFilter;
@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class CssRewriteFilter
- * @package ITE\JsBundle\Filter
+ * @package ITE\JsBundle\Assetic\Filter
  */
 class CssRewriteFilter extends BaseCssRewriteFilter
 {

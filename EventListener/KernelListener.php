@@ -33,22 +33,7 @@ class KernelListener
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if ($this->isSFAjaxRequest($event)) {
-//            $data = '';
-//            if ($response instanceof JsonResponse) {
-//                /** @var $response JsonResponse */
-//                $data = json_decode($response->getContent(), true);
-//            } elseif ($response instanceof RedirectResponse) {
-//                /** @var $response RedirectResponse */
-//                $this->sf->getParameterBag()->set('targetUrl', $response->getTargetUrl());
-//            } elseif ($response instanceof Response) {
-//                /** @var $response Response */
-//                $data = $response->getContent();
-//                if ('json' === $format) {
-//                    $data = json_decode($data, true);
-//                }
-//            }
-
-            $this->sf->onKernelResponse($event);
+            $this->sf->onAjaxResponse($event);
         }
     }
 
@@ -58,7 +43,7 @@ class KernelListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         if ($this->isSFAjaxRequest($event)) {
-            $this->sf->onKernelView($event);
+            $this->sf->onAjaxRequest($event);
         }
     }
 
@@ -69,7 +54,7 @@ class KernelListener
     protected function isSFAjaxRequest(KernelEvent $event)
     {
         $request = $event->getRequest();
-        return HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()
+        return $event->isMasterRequest()
             && $request->isXmlHttpRequest()
             && $request->headers->has('X-SF-Ajax');
     }

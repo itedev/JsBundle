@@ -15,24 +15,24 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 interface SFInterface
 {
     /**
-     * @param $extensionName
+     * @param $name
      * @return bool
      */
-    public function hasExtension($extensionName);
+    public function hasExtension($name);
 
     /**
-     * @param $extensionName
+     * @param $name
      * @param SFExtensionInterface $extension
      * @return SFInterface
      */
-    public function addExtension($extensionName, SFExtensionInterface $extension);
+    public function addExtension($name, SFExtensionInterface $extension);
 
     /**
-     * @param $extensionName
+     * @param $name
      * @return SFExtensionInterface
      * @throws InvalidArgumentException
      */
-    public function getExtension($extensionName);
+    public function getExtension($name);
 
     /**
      * @return array
@@ -50,17 +50,12 @@ interface SFInterface
     public function dump();
 
     /**
-     * @return ParameterBagInterface
-     */
-    public function getParameterBag();
-
-    /**
      * @param GetResponseForControllerResultEvent $event
      */
-    public function onKernelView(GetResponseForControllerResultEvent $event);
+    public function onAjaxRequest(GetResponseForControllerResultEvent $event);
 
     /**
      * @param FilterResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event);
+    public function onAjaxResponse(FilterResponseEvent $event);
 }

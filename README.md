@@ -1,23 +1,22 @@
 ITEJsBundle
 ===========
 
-Creates global JavaScript object and provide tools for making the bridge between Symfony 2 and JavaScript.
+Creates global JavaScript `SF` object and provide tools for making the bridge between Symfony 2 application and JavaScript.
 
 Configuration
 -------------
 
-@todo: add...
-
 ```yml
 # app/config/config.yml
 ite_js:
-
+    assetic:
+        cssrewrite: ~ # override standard `cssrewrite` filter to support @AcmeDemoBundle/Resources/public/... syntax
 ```
 
 Usage
 -----
 
-This bundle allows its extensions to add stylesheets and javascripts. To enable this feature, add `ite_js_sf_assets()` functions in your `stylesheets` and/or `javascripts` tags of your base template. To dump all needed data for SF object in one inline js, add `{{ ite_js_sf_dump() }}` expression after corresponding `javascripts` tag.
+This bundle allows its extensions to add stylesheets and javascripts. To enable this feature, add `ite_js_sf_assets()` functions in your `stylesheets` or/and `javascripts` tags of your template. To dump all needed data for SF object in one inline js, add `{{ ite_js_sf_dump() }}` expression after corresponding `javascripts` tag.
 
 ```twig
 {# app/Resources/views/base.html.twig #}
@@ -44,10 +43,10 @@ This bundle allows its extensions to add stylesheets and javascripts. To enable 
 Service 'ite_js.sf'
 -------------------
 
-This service is responsible for building SF object and dumping it to javascript. It dumps some system parameters by default, but you can dump own variables:
+This service is responsible for building `SF` object and dumping it to javascript. It dumps some system parameters by default, but you can dump own variables:
 
 ``` php
-$container->get('ite_js.sf')->getParameterBag()->set('foo', 'bar');
+$container->get('ite_js.sf')->parameters->set('foo', 'bar');
 ```
 
 Also it can act on kernel.view and kernel.response internal symfony 2 events. So, for example, it use these events to collect and pass to javascript session flashes during AJAX requests.
@@ -60,11 +59,13 @@ If you have FOSJsRoutingBundle installed, then SF.path function will be availabl
 Extensions
 ----------
 
-This service has extension support, for example ITEFormBundle works as an extension for this bundle. To register new extension, create new class that implements ITE\JsBundle\Service\SFExtensionInterface or extend ITE\JsBundle\SF\SFExtension class and register it as a service:
+This service has extension support, for example ITEFormBundle works as an extension for this bundle. To register new extension, create new class that implements `ITE\JsBundle\Service\SFExtensionInterface` or extend `ITE\JsBundle\SF\SFExtension` class and register it as a service:
 
 ```yml
-    acme_demo.sf.extension.test:
-        class:                                              Acme\DemoBundle\SF\TestExtension
-        tags:
-            - { name: ite_js.sf.extension, alias: test }
+# Acme/DemoBundle/Resources/config/services.yml
+
+acme_demo.sf.test_extension:
+    class: Acme\DemoBundle\SF\TestExtension
+    tags:
+        - { name: ite_js.sf.extension, alias: test }
 ```
