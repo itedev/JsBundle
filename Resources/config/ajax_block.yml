@@ -1,0 +1,19 @@
+parameters:
+    ite_js.ajax_block.renderer.class: ITE\JsBundle\AjaxBlock\AjaxBlockRenderer
+    ite_js.twig.ajax_block_extension.class: ITE\JsBundle\Twig\Extension\AjaxBlockExtension
+    ite_js.ajax_block.kernel_listener.class: ITE\JsBundle\EventListener\AjaxBlockKernelListener
+
+services:
+    ite_js.ajax_block.renderer:
+        class: %ite_js.ajax_block.renderer.class%
+        arguments: [@twig]
+
+    ite_js.ajax_block.kernel_listener:
+        class: %ite_js.ajax_block.kernel_listener.class%
+        arguments: [@ite_js.ajax_block.renderer]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 200 }
+
+    ite_js.twig.ajax_block_extension:
+        class: %ite_js.twig.ajax_block_extension.class%
+        tags: [{ name: twig.extension }]

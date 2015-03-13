@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('ite_js');
 
         $this->addAsseticConfiguration($rootNode);
+        $this->addAjaxBlockConfiguration($rootNode);
 
         return $treeBuilder;
     }
@@ -41,6 +42,20 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
+        ;
+    }
+
+    /**
+     * @param ArrayNodeDefinition $rootNode
+     */
+    protected function addAjaxBlockConfiguration(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+          ->children()
+                ->arrayNode('ajax_block')
+                    ->canBeEnabled()
+                ->end()
+          ->end()
         ;
     }
 }

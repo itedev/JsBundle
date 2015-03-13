@@ -28,6 +28,19 @@ class ITEJsExtension extends Extension
         $loader->load('overridden_services.yml');
 
         $this->loadAsseticConfiguration($loader, $config, $container);
+        $this->loadAjaxBlockConfiguration($loader, $config, $container);
+    }
+
+    /**
+     * @param FileLoader       $loader
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    protected function loadAjaxBlockConfiguration(FileLoader $loader, array $config, ContainerBuilder $container)
+    {
+        if ($config['ajax_block']['enabled']) {
+            $loader->load('ajax_block.yml');
+        }
     }
 
     /**
