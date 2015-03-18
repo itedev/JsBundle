@@ -139,7 +139,7 @@ class SF implements SFInterface
 
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
-            $extension->onKernelView($event);
+            $extension->onAjaxRequest($event);
         }
     }
 
@@ -160,7 +160,7 @@ class SF implements SFInterface
 
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
-            $extension->onKernelResponse($event);
+            $extension->onAjaxResponse($event);
         }
     }
 

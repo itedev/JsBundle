@@ -137,6 +137,34 @@
           var parameters = $.parseJSON(parametersHeader);
           window.SF.parameters.add(parameters);
         }
+
+        var ajaxBlocksHeader = xhr.getResponseHeader('X-SF-Ajax-Blocks');
+        if (ajaxBlocksHeader && settings.dataType == 'json') {
+          settings.dataType = 'ite_content';
+        }
+      },
+      parseSfResponse: function(rawData) {
+        var data = rawData;
+        var blocks = data.blocks;
+
+        $.each(blocks, function(selector, blockData) {
+          $(selector).on('ite-show.block', function() {
+            $(this).html(blockData.block_data);
+            $(this)[blockData.show_animation](blockData.length);
+          });
+
+          var event = $.Event('ite-before-show.block');
+          $(selector).trigger(event, [blockData]);
+
+          if(false === event.result) {
+            return data.data;
+          }
+
+          $(selector).hide();
+          $(selector).trigger('ite-show.block', blockData);
+        });
+
+        return data.data;
       }
     },
     callbacks: {},
@@ -167,11 +195,22 @@
   $.ajaxSetup({
     beforeSend: function(jqXHR, settings) {
       jqXHR.setRequestHeader('X-SF-Ajax', '1');
+      if(settings.dataType === 'json') {
+        settings.dataTypes.push('ite_content');
+      }
+    },
+    contents: {
+      ite_content: /ite_content/
+    },
+      converters: {
+      "json ite_content": window.SF.util.parseSfResponse
     }
   });
 
   $(document).ajaxComplete(function(event, xhr, settings) {
     window.SF.util.processXhr(xhr, settings);
   });
+
+
 
 })(jQuery);

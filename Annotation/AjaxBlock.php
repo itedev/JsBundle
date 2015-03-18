@@ -21,12 +21,44 @@ class AjaxBlock extends ConfigurationAnnotation
     /**
      * @var string
      */
+    protected $template;
+
+    /**
+     * @var string
+     */
     protected $blockName;
 
     /**
      * @var string
      */
     protected $selector;
+
+    /**
+     * @var string
+     */
+    protected $showAnimation = 'show';
+
+    /**
+     * @var int
+     */
+    protected $showLength = 0;
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @param string $template
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+    }
+
 
     /**
      * @return string
@@ -60,6 +92,37 @@ class AjaxBlock extends ConfigurationAnnotation
         $this->selector = $selector;
     }
 
+    /**
+     * @return string
+     */
+    public function getShowAnimation()
+    {
+        return $this->showAnimation;
+    }
+
+    /**
+     * @param string $showAnimation
+     */
+    public function setShowAnimation($showAnimation)
+    {
+        $this->showAnimation = $showAnimation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShowLength()
+    {
+        return $this->showLength;
+    }
+
+    /**
+     * @param int $showLength
+     */
+    public function setShowLength($showLength)
+    {
+        $this->showLength = $showLength;
+    }
 
 
     public function getAliasName()
