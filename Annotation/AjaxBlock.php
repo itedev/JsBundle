@@ -36,12 +36,12 @@ class AjaxBlock extends ConfigurationAnnotation
     /**
      * @var string
      */
-    protected $showAnimation = 'show';
+    protected $showAnimation;
 
     /**
      * @var int
      */
-    protected $showLength = 0;
+    protected $showLength;
 
     /**
      * @return string

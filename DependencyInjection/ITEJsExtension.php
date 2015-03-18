@@ -41,6 +41,7 @@ class ITEJsExtension extends Extension
         if ($config['ajax_block']['enabled']) {
             $loader->load('ajax_block.yml');
         }
+        $container->setParameter('ite_js.ajax_block.defaults', $config['ajax_block']['defaults']);
     }
 
     /**

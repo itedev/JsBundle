@@ -26,10 +26,15 @@ class AjaxBlockKernelListener
      * @var AjaxBlockRenderer
      */
     protected $renderer;
+    /**
+     * @var array
+     */
+    protected $defaults;
 
-    public function __construct(AjaxBlockRenderer $renderer)
+    public function __construct(AjaxBlockRenderer $renderer, array $defaults)
     {
         $this->renderer = $renderer;
+        $this->defaults = $defaults;
     }
 
     /**
@@ -65,8 +70,8 @@ class AjaxBlockKernelListener
                 $annotation->getBlockName(),
                 $originalData
               ),
-              'show_animation' => $annotation->getShowAnimation(),
-              'length'         => $annotation->getShowLength(),
+              'show_animation' => $annotation->getShowAnimation() === null ? $this->defaults['show_animation'] : $annotation->getShowAnimation(),
+              'length'         => $annotation->getShowLength() === null ? $this->defaults['show_length'] : $annotation->getShowLength(),
             ];
         }
 

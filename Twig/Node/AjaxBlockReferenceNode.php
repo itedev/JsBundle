@@ -37,7 +37,7 @@ class AjaxBlockReferenceNode extends \Twig_Node_BlockReference
 
         $compiler
           ->write(sprintf(
-            "\$this->env->getExtension('ite_js.twig.ajax_block_extension')->addAjaxBlockContent('%s', ob_get_clean());\n",
+            "\$this->env->getExtension('ite_js.twig.ajax_block_extension')->addAjaxBlockContent('%s', ob_get_flush());\n",
             $this->realName
           ))
             ;

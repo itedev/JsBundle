@@ -10,7 +10,7 @@ services:
 
     ite_js.ajax_block.kernel_listener:
         class: %ite_js.ajax_block.kernel_listener.class%
-        arguments: [@ite_js.ajax_block.renderer]
+        arguments: [@ite_js.ajax_block.renderer, %ite_js.ajax_block.defaults%]
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 200 }
 
