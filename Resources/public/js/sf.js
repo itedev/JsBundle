@@ -126,27 +126,13 @@
     flashes: new FlashBag(),
     util: {
       processXhr: function(xhr, settings) {
-        var flashesHeader = xhr.getResponseHeader('X-SF-Flashes');
-        if (flashesHeader) {
-          var flashes = $.parseJSON(flashesHeader);
-          window.SF.ui.renderFlashes(flashes);
-        }
-
-        var parametersHeader = xhr.getResponseHeader('X-SF-Parameters');
-        if (parametersHeader) {
-          var parameters = $.parseJSON(parametersHeader);
-          window.SF.parameters.add(parameters);
-        }
-
-        var ajaxBlocksHeader = xhr.getResponseHeader('X-SF-Ajax-Content');
-        if (ajaxBlocksHeader) {
-          settings.dataType = 'ite_content';
-        }
+        // @todo: check if it is needed
+        settings.dataType = 'sf_content';
       },
-      parseSfResponse: function (rawData) {
+      parseSfResponse: function(rawData) {
         var data = null;
 
-        if (typeof rawData != 'object') {
+        if ('object' !== typeof rawData) {
           data = $.parseJSON(rawData);
         } else {
           data = rawData;
@@ -154,7 +140,7 @@
 
         $(document).trigger('ite-ajax-loaded.content', data);
 
-        return data.data;
+        return data._sf_data;
       }
     },
     callbacks: {},
@@ -185,18 +171,19 @@
   $.ajaxSetup({
     beforeSend: function (jqXHR, settings) {
       jqXHR.setRequestHeader('X-SF-Ajax', '1');
-      settings.dataTypes.push('ite_content');
+      settings.dataTypes.push('sf_content');
     },
     contents: {
-      ite_content: /ite_content/
+      sf_content: /sf_content/
     },
     converters: {
-      "json ite_content": window.SF.util.parseSfResponse,
-      "html ite_content": window.SF.util.parseSfResponse,
-      "xml ite_content": window.SF.util.parseSfResponse
+      "json sf_content": window.SF.util.parseSfResponse,
+      "html sf_content": window.SF.util.parseSfResponse,
+      "xml sf_content": window.SF.util.parseSfResponse
     }
   });
 
+  // @todo: check if it is needed
   $(document).ajaxComplete(function(event, xhr, settings) {
     window.SF.util.processXhr(xhr, settings);
   });

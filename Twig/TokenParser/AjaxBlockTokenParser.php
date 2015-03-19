@@ -15,7 +15,6 @@ use Twig_Node_Block;
 use Twig_Node_Print;
 use Twig_Token;
 
-
 /**
  * Class AjaxBlockTokenParser
  *
@@ -23,6 +22,11 @@ use Twig_Token;
  */
 class AjaxBlockTokenParser extends \Twig_TokenParser_Block
 {
+    /**
+     * @param Twig_Token $token
+     * @return AjaxBlockReferenceNode
+     * @throws Twig_Error_Syntax
+     */
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
@@ -60,6 +64,10 @@ class AjaxBlockTokenParser extends \Twig_TokenParser_Block
         return new AjaxBlockReferenceNode($realName, $name, $lineno, $this->getTag());
     }
 
+    /**
+     * @param Twig_Token $token
+     * @return bool
+     */
     public function decideBlockEnd(Twig_Token $token)
     {
         return $token->test('end_ajax_block');

@@ -21,7 +21,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('ite_js');
 
         $this->addAsseticConfiguration($rootNode);
-        $this->addAjaxBlockConfiguration($rootNode);
+        $this->addAjaxContentConfiguration($rootNode);
 
         return $treeBuilder;
     }
@@ -48,27 +48,32 @@ class Configuration implements ConfigurationInterface
     /**
      * @param ArrayNodeDefinition $rootNode
      */
-    protected function addAjaxBlockConfiguration(ArrayNodeDefinition $rootNode)
+    protected function addAjaxContentConfiguration(ArrayNodeDefinition $rootNode)
     {
         $rootNode
-          ->children()
+            ->children()
                 ->arrayNode('ajax_content')
+                    ->canBeEnabled()
                     ->children()
                         ->arrayNode('ajax_block')
                             ->canBeEnabled()
                             ->children()
-                                ->arrayNode('defaults')
+                                ->arrayNode('show_animation')
                                     ->addDefaultsIfNotSet()
-                                    ->treatNullLike(['show_animation' => 'show', 'show_length' => 0])
-                                    ->children()
-                                        ->scalarNode('show_animation')->defaultValue('show')->end()
-                                        ->scalarNode('show_length')->defaultValue(0)->end()
+                                    ->scalarNode('type')
+                                        ->defaultValue('show')
+                                        ->info('animation type')
+                                    ->end()
+                                    ->integerNode('length')
+                                        ->defaultValue(0)
+                                        ->min(0)
+                                        ->info('time in ms')
                                     ->end()
                                 ->end()
                         ->end()
                     ->end()
                 ->end()
-          ->end()
+            ->end()
         ;
     }
 }

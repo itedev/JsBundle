@@ -59,7 +59,6 @@ class AjaxBlock extends ConfigurationAnnotation
         $this->template = $template;
     }
 
-
     /**
      * @return string
      */
@@ -124,12 +123,17 @@ class AjaxBlock extends ConfigurationAnnotation
         $this->showLength = $showLength;
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
     public function getAliasName()
     {
         return 'ajax_block';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function allowArray()
     {
         return true;

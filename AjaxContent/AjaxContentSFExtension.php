@@ -44,16 +44,17 @@ class AjaxContentSFExtension extends SFExtension
         $this->extensionManager = $extensionManager;
     }
 
+    /**
+     * @return array
+     */
     public function addJavascripts()
     {
-        $js = [];
-        foreach ($this->extensionManager->getAllExtensions() as $extension) {
-            if($jsPath = $extension->getJavascriptResource()) {
-                $js []= $jsPath;
-            }
+        $inputs = array();
+        foreach ($this->extensionManager->getExtensions() as $extension) {
+            $inputs = array_merge($inputs, $extension->addJavascripts());
         }
 
-        return $js;
+        return $inputs;
     }
 
     /**
@@ -63,7 +64,7 @@ class AjaxContentSFExtension extends SFExtension
     {
         $contentData = [];
 
-        foreach ($this->extensionManager->getAllExtensions() as $extension) {
+        foreach ($this->extensionManager->getExtensions() as $extension) {
             if ($extension->supports($event->getRequest())) {
                 $contentData[$extension->getName()] = $extension->getDataForAjaxResponse($event);
             }
@@ -79,7 +80,7 @@ class AjaxContentSFExtension extends SFExtension
      */
     public function onAjaxResponse(FilterResponseEvent $event)
     {
-        if ($ajaxResponse = $event->getRequest()->attributes->get('_ajax_response')) {
+        if (null !== $ajaxResponse = $event->getRequest()->attributes->get('_ajax_response')) {
             $this->injectData($event->getRequest(), $event->getResponse(), $ajaxResponse);
         }
     }
@@ -98,10 +99,9 @@ class AjaxContentSFExtension extends SFExtension
         } else {
             $originalData = $response->getContent();
         }
-        $extendedData = array_merge(['data' => $originalData], $data);
+        $extendedData = array_merge(['_sf_data' => $originalData], $data);
         $content      = $this->getSerializer()->encode($extendedData, $requestFormat);
         $response->setContent($content);
-        $response->headers->set('X-SF-Ajax-Content', 1);
     }
 
     /**
@@ -109,7 +109,7 @@ class AjaxContentSFExtension extends SFExtension
      */
     protected function getSerializer()
     {
-        if($this->serializer) {
+        if ($this->serializer) {
             return $this->serializer;
         }
 

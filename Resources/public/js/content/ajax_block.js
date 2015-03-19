@@ -3,23 +3,25 @@
  */
 (function ($) {
   $(document).on('ite-ajax-loaded.content', function (e, contentData) {
-    var blocks = typeof contentData.blocks != undefined ? contentData.blocks : [];
+    var blocks = 'undefined' !== typeof contentData.blocks ? contentData.blocks : [];
 
     $.each(blocks, function(selector, blockData) {
-      var $selector = $(selector);
-      $selector.on('ite-show.block', function() {
-        $(this).html(blockData.block_data);
-        $(this)[blockData.show_animation](blockData.length);
+      var $element = $(selector);
+      $element.on('ite-show.block', function() {
+        $(this).html(blockData.content);
+        $(this)[blockData.show_animation.type](blockData.show_animation.length);
       });
 
       var event = $.Event('ite-before-show.block');
-      $selector.trigger(event, [blockData]);
-
-      if(false === event.result) {
+      $element.trigger(event, [blockData]);
+      if (false === event.result) {
         return;
       }
 
-      $selector.hide().trigger('ite-show.block', blockData);
+      $element
+        .hide()
+        .trigger('ite-show.block', blockData)
+      ;
     });
   });
 })(jQuery);

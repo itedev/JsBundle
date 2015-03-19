@@ -18,18 +18,15 @@ use ITE\JsBundle\Twig\TokenParser\AjaxBlockTokenParser;
  */
 class AjaxBlockExtension extends \Twig_Extension
 {
-
     /**
      * @return array
      */
     public function getTokenParsers()
     {
         return array(
-          new AjaxBlockTokenParser()
+            new AjaxBlockTokenParser(),
         );
     }
-
-
 
     /**
      * @param string $blockName

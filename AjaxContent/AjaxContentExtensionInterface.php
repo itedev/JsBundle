@@ -30,9 +30,9 @@ interface AjaxContentExtensionInterface
     public function getDataForAjaxResponse(GetResponseForControllerResultEvent $event);
 
     /**
-     * @return string
+     * @return array
      */
-    public function getJavascriptResource();
+    public function addJavascripts();
 
     /**
      * @param Request $request

@@ -8,7 +8,6 @@
 
 namespace ITE\JsBundle\AjaxContent\Extension;
 
-
 use ITE\JsBundle\AjaxBlock\AjaxBlockRenderer;
 use ITE\JsBundle\AjaxContent\AjaxContentExtensionInterface;
 use ITE\JsBundle\Annotation\AjaxBlock;
@@ -31,17 +30,16 @@ class AjaxBlockExtension implements AjaxContentExtensionInterface
     /**
      * @var array
      */
-    protected $defaults;
-
+    protected $options;
 
     /**
      * @param AjaxBlockRenderer $renderer
-     * @param array             $defaults
+     * @param array             $options
      */
-    public function __construct(AjaxBlockRenderer $renderer, array $defaults)
+    public function __construct(AjaxBlockRenderer $renderer, array $options)
     {
         $this->renderer = $renderer;
-        $this->defaults = $defaults;
+        $this->options = $options;
     }
 
     /**
@@ -49,24 +47,26 @@ class AjaxBlockExtension implements AjaxContentExtensionInterface
      */
     public function getDataForAjaxResponse(GetResponseForControllerResultEvent $event)
     {
-        $request  = $event->getRequest();
-
+        $request = $event->getRequest();
         $configuration = $request->attributes->get('_ajax_block');
 
         $data = [];
-
-        /** @var AjaxBlock $annotation */
         foreach ($configuration as $annotation) {
+            /** @var AjaxBlock $annotation */
             $data[$annotation->getSelector()] = [
-              'block_data'     => $this->renderer->render(
-                $this->getTemplate($request, $annotation),
-                $annotation->getBlockName(),
-                $event->getControllerResult()
-              ),
-              'show_animation' => $annotation->getShowAnimation(
-              ) === null ? $this->defaults['show_animation'] : $annotation->getShowAnimation(),
-              'length'         => $annotation->getShowLength(
-              ) === null ? $this->defaults['show_length'] : $annotation->getShowLength(),
+                'content' => $this->renderer->render(
+                    $this->getTemplate($request, $annotation),
+                    $annotation->getBlockName(),
+                    $event->getControllerResult()
+                ),
+                'show_animation' => [
+                    'type' => null === $annotation->getShowAnimation()
+                        ? $this->options['show_animation']['type']
+                        : $annotation->getShowAnimation(),
+                    'length' => null === $annotation->getShowLength()
+                        ? $this->options['show_animation']['length']
+                        : $annotation->getShowLength()
+                ],
             ];
         }
 
@@ -100,9 +100,9 @@ class AjaxBlockExtension implements AjaxContentExtensionInterface
     /**
      * @return string
      */
-    public function getJavascriptResource()
+    public function addJavascripts()
     {
-        return '@ITEJsBundle/Resources/public/js/content/ajax_block.js';
+        return ['@ITEJsBundle/Resources/public/js/content/ajax_block.js'];
     }
 
     /**

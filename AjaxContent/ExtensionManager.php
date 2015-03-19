@@ -18,7 +18,7 @@ class ExtensionManager
     /**
      * @var AjaxContentExtensionInterface[]
      */
-    protected $extensions;
+    protected $extensions = [];
 
     /**
      * @param AjaxContentExtensionInterface $extension
@@ -40,8 +40,8 @@ class ExtensionManager
     /**
      * @return AjaxContentExtensionInterface[]
      */
-    public function getAllExtensions()
+    public function getExtensions()
     {
-        return $this->extensions ?: [];
+        return $this->extensions;
     }
 }
