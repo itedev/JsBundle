@@ -2,35 +2,42 @@
 /**
  * This file is created by sam0delkin (t.samodelkin@gmail.com).
  * IT-Excellence (http://itedev.com)
- * Date: 13.03.2015
- * Time: 11:07
+ * Date: 19.03.2015
+ * Time: 13:16
  */
 
-namespace ITE\JsBundle\EventListener;
+namespace ITE\JsBundle\AjaxContent\Extension;
+
 
 use ITE\JsBundle\AjaxBlock\AjaxBlockRenderer;
+use ITE\JsBundle\AjaxContent\AjaxContentExtensionInterface;
 use ITE\JsBundle\Annotation\AjaxBlock;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\Templating\TemplateReference;
 
 /**
- * Class AjaxBlockKernelListener
+ * Class AjaxBlockExtension
  *
- * @package ITE\JsBundle\EventListener
+ * @package ITE\JsBundle\AjaxContent\Extension
  */
-class AjaxBlockKernelListener
+class AjaxBlockExtension implements AjaxContentExtensionInterface
 {
     /**
      * @var AjaxBlockRenderer
      */
     protected $renderer;
+
     /**
      * @var array
      */
     protected $defaults;
 
+
+    /**
+     * @param AjaxBlockRenderer $renderer
+     * @param array             $defaults
+     */
     public function __construct(AjaxBlockRenderer $renderer, array $defaults)
     {
         $this->renderer = $renderer;
@@ -38,46 +45,32 @@ class AjaxBlockKernelListener
     }
 
     /**
-     * @param FilterResponseEvent $event
+     * @return array
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function getDataForAjaxResponse(GetResponseForControllerResultEvent $event)
     {
         $request  = $event->getRequest();
-        $response = $event->getResponse();
 
-        if (
-          !$event->isMasterRequest()
-          || !($configuration = $request->attributes->get('_ajax_block'))
-          || !$request->isXmlHttpRequest()
-          || $request->getRequestFormat() !== 'json'
-          || !$request->headers->has('X-SF-Ajax')
-        ) {
-            return;
-        }
+        $configuration = $request->attributes->get('_ajax_block');
 
-        $originalData = json_decode($response->getContent(), true);
-
-        $data = array(
-          'data'   => $originalData,
-          'blocks' => array()
-        );
+        $data = [];
 
         /** @var AjaxBlock $annotation */
         foreach ($configuration as $annotation) {
-            $data['blocks'][$annotation->getSelector()] = [
+            $data[$annotation->getSelector()] = [
               'block_data'     => $this->renderer->render(
                 $this->getTemplate($request, $annotation),
                 $annotation->getBlockName(),
-                $originalData
+                $event->getControllerResult()
               ),
-              'show_animation' => $annotation->getShowAnimation() === null ? $this->defaults['show_animation'] : $annotation->getShowAnimation(),
-              'length'         => $annotation->getShowLength() === null ? $this->defaults['show_length'] : $annotation->getShowLength(),
+              'show_animation' => $annotation->getShowAnimation(
+              ) === null ? $this->defaults['show_animation'] : $annotation->getShowAnimation(),
+              'length'         => $annotation->getShowLength(
+              ) === null ? $this->defaults['show_length'] : $annotation->getShowLength(),
             ];
         }
 
-        $response->headers->add(array('X-SF-Ajax-Blocks' => count($configuration)));
-        $response->setContent(json_encode($data));
-        $response->headers->set('Content-Type', 'application/ite_content');
+        return $data;
     }
 
     /**
@@ -87,7 +80,7 @@ class AjaxBlockKernelListener
      */
     protected function getTemplate(Request $request, AjaxBlock $configuration)
     {
-        if($configuration->getTemplate()) {
+        if ($configuration->getTemplate()) {
             return $configuration->getTemplate();
         }
 
@@ -103,4 +96,30 @@ class AjaxBlockKernelListener
 
         return $templateName;
     }
+
+    /**
+     * @return string
+     */
+    public function getJavascriptResource()
+    {
+        return '@ITEJsBundle/Resources/public/js/content/ajax_block.js';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'blocks';
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function supports(Request $request)
+    {
+        return $request->attributes->has('_ajax_block');
+    }
+
 }

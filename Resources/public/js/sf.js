@@ -138,31 +138,21 @@
           window.SF.parameters.add(parameters);
         }
 
-        var ajaxBlocksHeader = xhr.getResponseHeader('X-SF-Ajax-Blocks');
-        if (ajaxBlocksHeader && settings.dataType == 'json') {
+        var ajaxBlocksHeader = xhr.getResponseHeader('X-SF-Ajax-Content');
+        if (ajaxBlocksHeader) {
           settings.dataType = 'ite_content';
         }
       },
-      parseSfResponse: function(rawData) {
-        var data = rawData;
-        var blocks = data.blocks;
+      parseSfResponse: function (rawData) {
+        var data = null;
 
-        $.each(blocks, function(selector, blockData) {
-          $(selector).on('ite-show.block', function() {
-            $(this).html(blockData.block_data);
-            $(this)[blockData.show_animation](blockData.length);
-          });
+        if (typeof rawData != 'object') {
+          data = $.parseJSON(rawData);
+        } else {
+          data = rawData;
+        }
 
-          var event = $.Event('ite-before-show.block');
-          $(selector).trigger(event, [blockData]);
-
-          if(false === event.result) {
-            return data.data;
-          }
-
-          $(selector).hide();
-          $(selector).trigger('ite-show.block', blockData);
-        });
+        $(document).trigger('ite-ajax-loaded.content', data);
 
         return data.data;
       }
@@ -193,17 +183,17 @@
   window.SF = new SF();
 
   $.ajaxSetup({
-    beforeSend: function(jqXHR, settings) {
+    beforeSend: function (jqXHR, settings) {
       jqXHR.setRequestHeader('X-SF-Ajax', '1');
-      if(settings.dataType === 'json') {
-        settings.dataTypes.push('ite_content');
-      }
+      settings.dataTypes.push('ite_content');
     },
     contents: {
       ite_content: /ite_content/
     },
-      converters: {
-      "json ite_content": window.SF.util.parseSfResponse
+    converters: {
+      "json ite_content": window.SF.util.parseSfResponse,
+      "html ite_content": window.SF.util.parseSfResponse,
+      "xml ite_content": window.SF.util.parseSfResponse
     }
   });
 

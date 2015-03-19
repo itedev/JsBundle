@@ -28,7 +28,18 @@ class ITEJsExtension extends Extension
         $loader->load('overridden_services.yml');
 
         $this->loadAsseticConfiguration($loader, $config, $container);
+        $this->loadAjaxContentConfiguration($loader, $config, $container);
         $this->loadAjaxBlockConfiguration($loader, $config, $container);
+    }
+
+    /**
+     * @param FileLoader       $loader
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    protected function loadAjaxContentConfiguration(FileLoader $loader, array $config, ContainerBuilder $container)
+    {
+        $loader->load('ajax_content.yml');
     }
 
     /**
@@ -38,10 +49,10 @@ class ITEJsExtension extends Extension
      */
     protected function loadAjaxBlockConfiguration(FileLoader $loader, array $config, ContainerBuilder $container)
     {
-        if ($config['ajax_block']['enabled']) {
+        if ($config['ajax_content']['ajax_block']['enabled']) {
             $loader->load('ajax_block.yml');
+            $container->setParameter('ite_js.ajax_content.ajax_block.defaults', $config['ajax_content']['ajax_block']['defaults']);
         }
-        $container->setParameter('ite_js.ajax_block.defaults', $config['ajax_block']['defaults']);
     }
 
     /**

@@ -1,0 +1,12 @@
+parameters:
+  ite_js.ajax_content.sf_extension.class: ITE\JsBundle\AjaxContent\AjaxContentSFExtension
+  ite_js.ajax_content.extension_manager.class: ITE\JsBundle\AjaxContent\ExtensionManager
+
+services:
+  ite_js.ajax_content.sf_extension:
+    class: %ite_js.ajax_content.sf_extension.class%
+    arguments: [@ite_js.ajax_content.extension_manager]
+    tags: [{ name: ite_js.sf.extension, alias: content }]
+
+  ite_js.ajax_content.extension_manager:
+    class: %ite_js.ajax_content.extension_manager.class%
