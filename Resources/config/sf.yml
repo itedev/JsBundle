@@ -1,23 +1,36 @@
 parameters:
-    ite_js.sf.class:                ITE\JsBundle\SF\SF
-    ite_js.kernel_listener.class:   ITE\JsBundle\EventListener\KernelListener
-    ite_js.twig.sf_extension.class: ITE\JsBundle\Twig\Extension\SFExtension
+    ite_js.sf.class:                    ITE\JsBundle\SF\SF
+    ite_js.kernel_listener.class:       ITE\JsBundle\EventListener\KernelListener
+    ite_js.twig.sf_extension.class:     ITE\JsBundle\Twig\Extension\SFExtension
+    ite_js.assetic.sf_resource.class:   ITE\JsBundle\Assetic\Factory\Resource\SFResource
+    ite_js.assetic.sf_loader.class:     ITE\JsBundle\Assetic\Factory\Loader\SFLoader
 
 services:
     ite_js.sf:
         class: %ite_js.sf.class%
-        arguments: [@service_container]
+        arguments: [ @service_container ]
 
     ite_js.kernel_listener:
         class: %ite_js.kernel_listener.class%
-        arguments: [@ite_js.sf]
+        arguments: [ @ite_js.sf ]
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -255 }
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView, priority: 256 }
 
     ite_js.twig.sf_extension:
         class: %ite_js.twig.sf_extension.class%
-        arguments: [@ite_js.sf]
+        arguments: [ @ite_js.sf ]
         tags:
             - { name: twig.extension }
 
+    ite_js.assetic.sf_resource:
+        class: %ite_js.assetic.sf_resource.class%
+        arguments: [ @ite_js.sf ]
+        public: false
+        tags:
+            - { name: assetic.formula_resource, loader: sf }
+
+    ite_js.assetic.sf_loader:
+        class: %ite_js.assetic.sf_loader.class%
+        tags:
+            - { name: assetic.formula_loader, alias: sf }

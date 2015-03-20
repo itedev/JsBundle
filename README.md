@@ -31,7 +31,6 @@ This bundle allows its extensions to add stylesheets and javascripts. To enable 
 {% javascripts
     '@AcmeDemoBundle/Resources/public/js/jquery.js'
     {# ... #}
-    '@ITEJsBundle/Resources/public/js/sf.js'
     ite_js_sf_assets()
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -54,7 +53,7 @@ Also it can act on kernel.view and kernel.response internal symfony 2 events. So
 SF object in javascript
 -----------------------
 
-If you have FOSJsRoutingBundle installed, then SF.path function will be available as an alias for Routing.generate.
+If you have FOSJsRoutingBundle installed, then `SF.path` and `SF.url` functions will be available as an aliases for Routing.generate.
 
 Extensions
 ----------

@@ -19,7 +19,7 @@ use ITE\JsBundle\Twig\TokenParser\AjaxBlockTokenParser;
 class AjaxBlockExtension extends \Twig_Extension
 {
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getTokenParsers()
     {
@@ -38,9 +38,7 @@ class AjaxBlockExtension extends \Twig_Extension
     }
 
     /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
+     * {@inheritdoc}
      */
     public function getName()
     {

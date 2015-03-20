@@ -23,10 +23,7 @@ class AjaxBlockReferenceNode extends \Twig_Node_BlockReference
     private $realName;
 
     /**
-     * @param array $realName
-     * @param array $name
-     * @param null $lineno
-     * @param null $tag
+     * {@inheritdoc}
      */
     public function __construct($realName, $name, $lineno, $tag = null)
     {
@@ -35,7 +32,7 @@ class AjaxBlockReferenceNode extends \Twig_Node_BlockReference
     }
 
     /**
-     * @param Twig_Compiler $compiler
+     * {@inheritdoc}
      */
     public function compile(Twig_Compiler $compiler)
     {

@@ -103,7 +103,7 @@ class SF implements SFInterface
      */
     public function addJavascripts()
     {
-        $inputs = array();
+        $inputs = array('@ITEJsBundle/Resources/public/js/sf.js');
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
             $inputs = array_merge($inputs, $extension->addJavascripts());
@@ -162,6 +162,11 @@ class SF implements SFInterface
             /** @var $extension SFExtensionInterface */
             $extension->onAjaxResponse($event);
         }
+    }
+
+    public function __sleep()
+    {
+        return array();
     }
 
     /**
