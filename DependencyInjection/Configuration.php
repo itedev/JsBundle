@@ -21,7 +21,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('ite_js');
 
         $this->addAsseticConfiguration($rootNode);
-        $this->addAjaxContentConfiguration($rootNode);
+        $this->addExtensionsConfiguration($rootNode);
 
         return $treeBuilder;
     }
@@ -47,32 +47,42 @@ class Configuration implements ConfigurationInterface
 
     /**
      * @param ArrayNodeDefinition $rootNode
+     * @return ArrayNodeDefinition
      */
-    protected function addAjaxContentConfiguration(ArrayNodeDefinition $rootNode)
+    protected function addExtensionsConfiguration(ArrayNodeDefinition $rootNode)
+    {
+        $node = $rootNode
+            ->children()
+                ->arrayNode('extensions')
+                    ->addDefaultsIfNotSet();
+
+        $this->addAjaxBlockConfiguration($node);
+    }
+
+    /**
+     * @param ArrayNodeDefinition $rootNode
+     */
+    protected function addAjaxBlockConfiguration(ArrayNodeDefinition $rootNode)
     {
         $rootNode
             ->children()
-                ->arrayNode('ajax_content')
+                ->arrayNode('ajax_block')
                     ->canBeEnabled()
                     ->children()
-                        ->arrayNode('ajax_block')
-                            ->canBeEnabled()
+                        ->arrayNode('show_animation')
+                            ->addDefaultsIfNotSet()
                             ->children()
-                                ->arrayNode('show_animation')
-                                    ->addDefaultsIfNotSet()
-                                    ->children()
-                                        ->enumNode('type')
-                                            ->defaultValue('show')
-                                            ->values(array('show', 'slide', 'fade'))
-                                            ->info('animation type')
-                                        ->end()
-                                        ->integerNode('length')
-                                            ->defaultValue(0)
-                                            ->min(0)
-                                            ->info('time in ms')
-                                        ->end()
-                                    ->end()
+                                ->enumNode('type')
+                                    ->defaultValue('show')
+                                    ->values(array('show', 'slide', 'fade'))
+                                    ->info('animation type')
                                 ->end()
+                                ->integerNode('length')
+                                    ->defaultValue(0)
+                                    ->min(0)
+                                    ->info('time in ms')
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

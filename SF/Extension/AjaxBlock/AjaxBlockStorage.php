@@ -6,12 +6,11 @@
  * Time: 18:11
  */
 
-namespace ITE\JsBundle\AjaxBlock;
+namespace ITE\JsBundle\SF\Extension\AjaxBlock;
 
 /**
  * Class AjaxBlockStorage
- *
- * @package ITE\JsBundle\AjaxBlock
+ * @package ITE\JsBundle\SF\Extension\AjaxBlock
  */
 class AjaxBlockStorage
 {
@@ -46,6 +45,9 @@ class AjaxBlockStorage
         return self::$storage;
     }
 
+    /**
+     *
+     */
     public static function clearStorage()
     {
         self::$storage = array();
@@ -56,7 +58,7 @@ class AjaxBlockStorage
      */
     public static function removeFromStorage($blockName)
     {
-        if(isset(self::$storage[$blockName])) {
+        if (isset(self::$storage[$blockName])) {
             unset(self::$storage[$blockName]);
         }
     }

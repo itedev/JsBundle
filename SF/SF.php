@@ -153,7 +153,7 @@ class SF implements SFInterface
             /** @var $extension SFExtensionInterface */
             $extension->onAjaxRequest($event);
             if (count($extensionContent = $extension->getAjaxContent($ajaxRequestEvent))) {
-                $ajaxContent['_sf_'.$name] = $extensionContent;
+                $ajaxContent['_sf_' . $name] = $extensionContent;
             }
         }
 
@@ -193,7 +193,6 @@ class SF implements SFInterface
 
         return $this->serializer = new Serializer([], [new JsonEncoder(), new XmlEncoder()]);
     }
-
 
     /**
      * @param FilterResponseEvent $event

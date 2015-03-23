@@ -8,7 +8,7 @@
 
 namespace ITE\JsBundle\Twig\Extension;
 
-use ITE\JsBundle\AjaxBlock\AjaxBlockStorage;
+use ITE\JsBundle\SF\Extension\AjaxBlock\AjaxBlockStorage;
 use ITE\JsBundle\Twig\TokenParser\AjaxBlockTokenParser;
 
 /**

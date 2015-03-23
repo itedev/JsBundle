@@ -28,6 +28,7 @@ interface SFExtensionInterface
     public function dump();
 
     /**
+     * @param AjaxRequestEvent $event
      * @return array
      */
     public function getAjaxContent(AjaxRequestEvent $event);

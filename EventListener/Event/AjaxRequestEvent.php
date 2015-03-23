@@ -8,7 +8,8 @@
 
 namespace ITE\JsBundle\EventListener\Event;
 
-
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
@@ -19,12 +20,12 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 class AjaxRequestEvent
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpKernel\Event\Request
+     * @var Request
      */
     private $request;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Response
+     * @var Response
      */
     private $response;
 
@@ -44,7 +45,7 @@ class AjaxRequestEvent
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Request|\Symfony\Component\HttpKernel\Event\Request
+     * @return Request
      */
     public function getRequest()
     {
@@ -52,7 +53,7 @@ class AjaxRequestEvent
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getResponse()
     {

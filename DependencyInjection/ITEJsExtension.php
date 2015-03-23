@@ -37,9 +37,9 @@ class ITEJsExtension extends Extension
      */
     protected function loadAjaxBlockConfiguration(FileLoader $loader, array $config, ContainerBuilder $container)
     {
-        if ($config['ajax_content']['ajax_block']['enabled']) {
-            $container->setParameter('ite_js.ajax_content.ajax_block.options', $config['ajax_content']['ajax_block']);
-            $loader->load('ajax_block.yml');
+        if ($config['extensions']['ajax_block']['enabled']) {
+            $container->setParameter('ite_js.ajax_block.options', $config['extensions']['ajax_block']);
+            $loader->load('extension/ajax_block.yml');
         }
     }
 

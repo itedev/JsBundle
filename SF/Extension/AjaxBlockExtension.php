@@ -8,10 +8,9 @@
 
 namespace ITE\JsBundle\SF\Extension;
 
-
-use ITE\JsBundle\AjaxBlock\AjaxBlockRenderer;
 use ITE\JsBundle\Annotation\AjaxBlock;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
+use ITE\JsBundle\SF\Extension\AjaxBlock\AjaxBlockRenderer;
 use ITE\JsBundle\SF\SFExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Templating\TemplateReference;
@@ -23,7 +22,6 @@ use Symfony\Component\Templating\TemplateReference;
  */
 class AjaxBlockExtension extends SFExtension
 {
-
     /**
      * @var AjaxBlockRenderer
      */
@@ -44,10 +42,20 @@ class AjaxBlockExtension extends SFExtension
         $this->options  = $options;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function addJavascripts()
+    {
+        return ['@ITEJsBundle/Resources/public/js/content/ajax_block.js'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAjaxContent(AjaxRequestEvent $event)
     {
         $request = $event->getRequest();
-
         if (!$request->attributes->has('_ajax_block')) {
             return [];
         }
@@ -58,19 +66,19 @@ class AjaxBlockExtension extends SFExtension
         foreach ($configuration as $annotation) {
             /** @var AjaxBlock $annotation */
             $data[$annotation->getSelector()] = [
-              'content'        => $this->renderer->render(
-                $this->getTemplate($request, $annotation),
-                $annotation->getBlockName(),
-                $event->getControllerResult()
-              ),
-              'show_animation' => [
-                'type'   => null === $annotation->getShowAnimation()
-                  ? $this->options['show_animation']['type']
-                  : $annotation->getShowAnimation(),
-                'length' => null === $annotation->getShowLength()
-                  ? $this->options['show_animation']['length']
-                  : $annotation->getShowLength()
-              ],
+                'content' => $this->renderer->render(
+                    $this->getTemplate($request, $annotation),
+                    $annotation->getBlockName(),
+                    $event->getControllerResult()
+                ),
+                'show_animation' => [
+                    'type' => null === $annotation->getShowAnimation()
+                        ? $this->options['show_animation']['type']
+                        : $annotation->getShowAnimation(),
+                    'length' => null === $annotation->getShowLength()
+                        ? $this->options['show_animation']['length']
+                        : $annotation->getShowLength()
+                ],
             ];
         }
 
@@ -100,11 +108,5 @@ class AjaxBlockExtension extends SFExtension
 
         return $templateName;
     }
-
-    public function addJavascripts()
-    {
-        return ['@ITEJsBundle/Resources/public/js/content/ajax_block.js'];
-    }
-
 
 }

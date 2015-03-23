@@ -1,6 +1,5 @@
 <?php
 
-
 namespace ITE\JsBundle\SF;
 
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
@@ -44,7 +43,6 @@ class SFExtension implements SFExtensionInterface
     {
         return [];
     }
-
 
     /**
      * @param GetResponseForControllerResultEvent $event

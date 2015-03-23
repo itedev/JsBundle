@@ -6,12 +6,11 @@
  * Time: 18:17
  */
 
-namespace ITE\JsBundle\AjaxBlock;
+namespace ITE\JsBundle\SF\Extension\AjaxBlock;
 
 /**
  * Class AjaxBlockRenderer
- *
- * @package ITE\JsBundle\AjaxBlock
+ * @package ITE\JsBundle\SF\Extension\AjaxBlock
  */
 class AjaxBlockRenderer
 {
@@ -44,7 +43,7 @@ class AjaxBlockRenderer
      */
     public function render($baseTemplateName, $ajaxBlockName, $context = array())
     {
-        $blockHash = $this->generateBlockHash($baseTemplateName, $ajaxBlockName, $context);
+        $blockHash = $this->generateBlockHash($baseTemplateName, $ajaxBlockName);
 
         if (isset($this->storage[$blockHash])) {
             return $this->storage[$blockHash];
@@ -54,7 +53,7 @@ class AjaxBlockRenderer
         $this->twig->render($baseTemplateName, $context);
 
         foreach (AjaxBlockStorage::getStorage() as $blockName => $blockContent) {
-            $hash                 = $this->generateBlockHash($baseTemplateName, $blockName, $context);
+            $hash                 = $this->generateBlockHash($baseTemplateName, $blockName);
             $this->storage[$hash] = $blockContent;
         }
 
