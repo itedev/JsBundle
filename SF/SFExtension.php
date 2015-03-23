@@ -3,6 +3,7 @@
 
 namespace ITE\JsBundle\SF;
 
+use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
@@ -35,6 +36,15 @@ class SFExtension implements SFExtensionInterface
     {
         return '';
     }
+
+    /**
+     * @return array
+     */
+    public function getAjaxContent(AjaxRequestEvent $event)
+    {
+        return [];
+    }
+
 
     /**
      * @param GetResponseForControllerResultEvent $event

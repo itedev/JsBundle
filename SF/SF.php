@@ -2,16 +2,20 @@
 
 namespace ITE\JsBundle\SF;
 
+use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class SF
@@ -38,6 +42,11 @@ class SF implements SFInterface
      * @var array $extensions
      */
     protected $extensions = array();
+
+    /**
+     * @var Serializer
+     */
+    protected $serializer;
 
     /**
      * @param ContainerInterface $container
@@ -137,11 +146,54 @@ class SF implements SFInterface
     {
         $this->collectFlashes();
 
-        foreach ($this->extensions as $extension) {
+        $ajaxRequestEvent = new AjaxRequestEvent($event);
+        $ajaxContent      = [];
+
+        foreach ($this->extensions as $name => $extension) {
             /** @var $extension SFExtensionInterface */
             $extension->onAjaxRequest($event);
+            if (count($extensionContent = $extension->getAjaxContent($ajaxRequestEvent))) {
+                $ajaxContent['_sf_'.$name] = $extensionContent;
+            }
+        }
+
+        if (count($ajaxContent)) {
+            $event->getRequest()->attributes->set('_sf_ajax_content', $ajaxContent);
         }
     }
+
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $data
+     */
+    protected function injectData(Request $request, Response $response, array $data)
+    {
+        $requestFormat = $request->getRequestFormat() === 'html' ? 'json' : $request->getRequestFormat();
+
+        if ($response && $request->getRequestFormat() !== 'html') {
+            $originalData = $this->getSerializer()->decode($response->getContent(), $requestFormat);
+        } else {
+            $originalData = $response->getContent();
+        }
+        $extendedData = array_merge(['_sf_data' => $originalData], $data);
+        $content      = $this->getSerializer()->encode($extendedData, $requestFormat);
+        $response->setContent($content);
+        $response->headers->add(['X-SF-Ajax-Content' => 1]);
+    }
+
+    /**
+     * @return Serializer|SerializerInterface
+     */
+    protected function getSerializer()
+    {
+        if ($this->serializer) {
+            return $this->serializer;
+        }
+
+        return $this->serializer = new Serializer([], [new JsonEncoder(), new XmlEncoder()]);
+    }
+
 
     /**
      * @param FilterResponseEvent $event
@@ -161,6 +213,10 @@ class SF implements SFInterface
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
             $extension->onAjaxResponse($event);
+        }
+
+        if (null !== $ajaxResponse = $event->getRequest()->attributes->get('_sf_ajax_content')) {
+            $this->injectData($event->getRequest(), $event->getResponse(), $ajaxResponse);
         }
     }
 

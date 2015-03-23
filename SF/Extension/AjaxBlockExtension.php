@@ -2,26 +2,28 @@
 /**
  * This file is created by sam0delkin (t.samodelkin@gmail.com).
  * IT-Excellence (http://itedev.com)
- * Date: 19.03.2015
- * Time: 13:16
+ * Date: 23.03.2015
+ * Time: 14:45
  */
 
-namespace ITE\JsBundle\AjaxContent\Extension;
+namespace ITE\JsBundle\SF\Extension;
+
 
 use ITE\JsBundle\AjaxBlock\AjaxBlockRenderer;
-use ITE\JsBundle\AjaxContent\AjaxContentExtensionInterface;
 use ITE\JsBundle\Annotation\AjaxBlock;
+use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
+use ITE\JsBundle\SF\SFExtension;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\Templating\TemplateReference;
 
 /**
  * Class AjaxBlockExtension
  *
- * @package ITE\JsBundle\AjaxContent\Extension
+ * @package ITE\JsBundle\SF\Extension
  */
-class AjaxBlockExtension implements AjaxContentExtensionInterface
+class AjaxBlockExtension extends SFExtension
 {
+
     /**
      * @var AjaxBlockRenderer
      */
@@ -39,34 +41,36 @@ class AjaxBlockExtension implements AjaxContentExtensionInterface
     public function __construct(AjaxBlockRenderer $renderer, array $options)
     {
         $this->renderer = $renderer;
-        $this->options = $options;
+        $this->options  = $options;
     }
 
-    /**
-     * @return array
-     */
-    public function getDataForAjaxResponse(GetResponseForControllerResultEvent $event)
+    public function getAjaxContent(AjaxRequestEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->has('_ajax_block')) {
+            return [];
+        }
+
         $configuration = $request->attributes->get('_ajax_block');
 
         $data = [];
         foreach ($configuration as $annotation) {
             /** @var AjaxBlock $annotation */
             $data[$annotation->getSelector()] = [
-                'content' => $this->renderer->render(
-                    $this->getTemplate($request, $annotation),
-                    $annotation->getBlockName(),
-                    $event->getControllerResult()
-                ),
-                'show_animation' => [
-                    'type' => null === $annotation->getShowAnimation()
-                        ? $this->options['show_animation']['type']
-                        : $annotation->getShowAnimation(),
-                    'length' => null === $annotation->getShowLength()
-                        ? $this->options['show_animation']['length']
-                        : $annotation->getShowLength()
-                ],
+              'content'        => $this->renderer->render(
+                $this->getTemplate($request, $annotation),
+                $annotation->getBlockName(),
+                $event->getControllerResult()
+              ),
+              'show_animation' => [
+                'type'   => null === $annotation->getShowAnimation()
+                  ? $this->options['show_animation']['type']
+                  : $annotation->getShowAnimation(),
+                'length' => null === $annotation->getShowLength()
+                  ? $this->options['show_animation']['length']
+                  : $annotation->getShowLength()
+              ],
             ];
         }
 
@@ -97,29 +101,10 @@ class AjaxBlockExtension implements AjaxContentExtensionInterface
         return $templateName;
     }
 
-    /**
-     * @return string
-     */
     public function addJavascripts()
     {
         return ['@ITEJsBundle/Resources/public/js/content/ajax_block.js'];
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'blocks';
-    }
-
-    /**
-     * @param Request $request
-     * @return bool
-     */
-    public function supports(Request $request)
-    {
-        return $request->attributes->has('_ajax_block');
-    }
 
 }

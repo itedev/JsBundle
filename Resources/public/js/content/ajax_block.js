@@ -3,7 +3,7 @@
  */
 (function($) {
   $(document).on('ite-ajax-loaded.content', function (e, contentData) {
-    var blocks = 'undefined' !== typeof contentData.blocks ? contentData.blocks : [];
+    var blocks = 'undefined' !== typeof contentData._sf_blocks ? contentData._sf_blocks : [];
 
     $.each(blocks, function(selector, blockData) {
       var $element = $(selector);
