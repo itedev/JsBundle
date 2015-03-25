@@ -1,6 +1,7 @@
 ITEJsBundle
 ===========
 
+
 Creates global JavaScript `SF` object and provide tools for making the bridge between Symfony 2 application and JavaScript.
 
 Configuration
