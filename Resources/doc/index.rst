@@ -6,6 +6,18 @@ Overview
 
 Creates global JavaScript `SF` object and provide tools for making the bridge between Symfony 2 application and JavaScript.
 
+Features
+--------
+
+.. toctree::
+    :hidden:
+
+    ajax_content
+    ajax_block
+
+- :doc:`AjaxContent <ajax_content>`
+- :doc:`AjaxBlock <ajax_block>`
+
 Configuration
 -------------
 
