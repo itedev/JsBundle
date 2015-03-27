@@ -14,7 +14,7 @@ Usage
 
 First, you need to enable it in config:
 
-.. code:: yml
+.. code-block:: yaml
 
     # app/config/config.yml
     ite_js:
@@ -26,7 +26,7 @@ First, you need to enable it in config:
 
 Second, you need to add @AjaxBlock annotation to your controller:
 
-.. code:: php
+.. code-block:: php
 
 
     use ITE\JsBundle\Annotation\AjaxBlock; //don't forget to use block
@@ -46,7 +46,7 @@ Second, you need to add @AjaxBlock annotation to your controller:
 
 Next, you will need to define ajax\_block in the twig template:
 
-.. code:: twig
+.. code-block:: html+jinja
 
 
     {# @AcmeDemo/Test/test.html.twig #}
@@ -62,7 +62,7 @@ Next, you will need to define ajax\_block in the twig template:
 
 Finally, you just need to execute AJAX query:
 
-.. code:: javascript
+.. code-block:: javascript
 
 
     $.get(SF.path('test_test'), {}, function(data) {

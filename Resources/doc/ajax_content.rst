@@ -14,7 +14,7 @@ Usage
 
 First, you need to regiser an extension:
 
-.. code:: yml
+.. code-block:: yaml
 
     # Acme/DemoBundle/Resources/config/services.yml
 
@@ -25,7 +25,7 @@ First, you need to regiser an extension:
 
 Then, just return needed values in extension:
 
-.. code:: php
+.. code-block:: php
 
 
     //Acme\DemoBundle\SF\TestExtension
@@ -42,7 +42,7 @@ Then, just return needed values in extension:
 
 Then you need to create a wrap data processor:
 
-.. code:: javascript
+.. code-block:: javascript
 
 
     (function($) {
@@ -54,7 +54,7 @@ Then you need to create a wrap data processor:
 
 Finally, you can create test controller:
 
-.. code:: php
+.. code-block:: php
 
 
     //Acme\DemoBundle\Controller\TestController
@@ -66,7 +66,7 @@ Finally, you can create test controller:
 
 and call it via AJAX from JS side:
 
-::
+.. code-block:: javascript
 
     //AcmeDemoBundle/Resources/public/js/some_script.js
     (function($) {
