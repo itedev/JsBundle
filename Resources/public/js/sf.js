@@ -128,6 +128,11 @@
       processXhr: function(xhr, settings) {
         // @todo: check if it is needed
         settings.dataType = 'sf_content';
+        var routeName = xhr.getResponseHeader('X-SF-Route');
+
+        if (routeName) {
+          this.trigger(routeName, true);
+        }
       },
       parseSfResponse: function(rawData) {
         var data = null;
@@ -144,11 +149,54 @@
       }
     },
     callbacks: {},
+    routeCallbacks: {},
     classes: {
       ParameterBag: ParameterBag,
       FlashBag: FlashBag
     },
     ui : {}
+  };
+
+  /**
+   * Call method only if current route matches routeName. Works also for AJAX requests too.
+   *
+   * @param {string} routeName The Route name (can be regexp)
+   * @param {function} callback The callback that will be invoked if route match
+   * @param {bool} ajax Specify does this method will be called either with AJAX response.
+   */
+  SF.prototype.on = function (routeName, callback, ajax) {
+    ajax = ajax || false;
+    if (typeof this.routeCallbacks[routeName] != 'undefined') {
+      this.routeCallbacks[routeName].push({callback: callback, ajax: ajax});
+    } else {
+      this.routeCallbacks[routeName] = [{callback: callback, ajax: ajax}];
+    }
+  };
+
+  /**
+   * Trigger all binded methods for route.
+   *
+   * @param {string} routeName
+   * @param {bool} ajax
+   */
+  SF.prototype.trigger = function (routeName, ajax) {
+    ajax = ajax || false;
+    $.each(this.routeCallbacks, function (name, callbacks) {
+      var routeNames = name.split(' ');
+
+      $.each(routeNames, function (key, value) {
+        var regExp = new RegExp(value);
+
+        if (regExp.test(routeName)) {
+          $.each(callbacks, function (index, callbackData) {
+            if(callbackData.ajax || (!callbackData.ajax && !ajax)) {
+              callbackData.callback.apply();
+            }
+          });
+        }
+      });
+
+    });
   };
 
   /**
@@ -186,6 +234,12 @@
   // @todo: check if it is needed
   $(document).ajaxComplete(function(event, xhr, settings) {
     window.SF.util.processXhr(xhr, settings);
+  });
+
+  $(document).ready(function () {
+    if (window.SF.parameters.has('route')) {
+      window.SF.trigger(window.SF.parameters.get('route'));
+    }
   });
 
 

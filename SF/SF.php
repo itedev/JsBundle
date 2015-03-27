@@ -209,6 +209,8 @@ class SF implements SFInterface
             $response->headers->set('X-SF-Parameters', json_encode($this->parameters->all()));
         }
 
+        $response->headers->set('X-SF-Route', $this->container->get('request')->get('_route'));
+
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
             $extension->onAjaxResponse($event);
