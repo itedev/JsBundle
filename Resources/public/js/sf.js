@@ -142,6 +142,9 @@
         } else {
           data = rawData;
         }
+        if(typeof data._sf_data == 'undefined') {
+          return data;
+        }
 
         $(document).trigger('ite-ajax-loaded.content', data);
 
