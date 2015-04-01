@@ -35,7 +35,7 @@ Then, just return needed values in extension:
         return ['foo' => 'bar'];
     }
 
-    public function addJavascripts()
+    public function getJavascripts()
     {
         return array('@AcmeDemoBundle/Resources/public/js/foo_bar.js'); //this file will be described below
     }

@@ -39,12 +39,12 @@ class SFResource implements ResourceInterface
     {
         return array(
             'sf_stylesheets' => array(
-                $this->sf->addStylesheets(),
+                $this->sf->getStylesheets(),
                 array(),
                 array()
             ),
             'sf_javascripts' => array(
-                $this->sf->addJavascripts(),
+                $this->sf->getJavascripts(),
                 array(),
                 array()
             ),

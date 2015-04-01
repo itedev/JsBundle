@@ -28,22 +28,22 @@ class KernelListener
     }
 
     /**
-     * @param FilterResponseEvent $event
-     */
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        if ($this->isSFAjaxRequest($event)) {
-            $this->sf->onAjaxResponse($event);
-        }
-    }
-
-    /**
      * @param GetResponseForControllerResultEvent $event
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         if ($this->isSFAjaxRequest($event)) {
             $this->sf->onAjaxRequest($event);
+        }
+    }
+
+    /**
+     * @param FilterResponseEvent $event
+     */
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        if ($this->isSFAjaxRequest($event)) {
+            $this->sf->onAjaxResponse($event);
         }
     }
 

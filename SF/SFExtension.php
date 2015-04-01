@@ -15,7 +15,7 @@ class SFExtension implements SFExtensionInterface
     /**
      * @return array
      */
-    public function addStylesheets()
+    public function getStylesheets()
     {
         return array();
     }
@@ -23,7 +23,7 @@ class SFExtension implements SFExtensionInterface
     /**
      * @return array
      */
-    public function addJavascripts()
+    public function getJavascripts()
     {
         return array();
     }
