@@ -15,12 +15,12 @@ interface SFExtensionInterface
     /**
      * @return array
      */
-    public function addStylesheets();
+    public function getStylesheets();
 
     /**
      * @return array
      */
-    public function addJavascripts();
+    public function getJavascripts();
 
     /**
      * @return string

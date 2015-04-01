@@ -45,9 +45,9 @@ class AjaxBlockExtension extends SFExtension
     /**
      * {@inheritdoc}
      */
-    public function addJavascripts()
+    public function getJavascripts()
     {
-        return ['@ITEJsBundle/Resources/public/js/content/ajax_block.js'];
+        return ['@ITEJsBundle/Resources/public/js/extension/sf.ajax_block.js'];
     }
 
     /**
