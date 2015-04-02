@@ -3,7 +3,6 @@
 namespace ITE\JsBundle\Twig\Extension;
 
 use ITE\JsBundle\SF\SFInterface;
-use Twig_Environment;
 use Twig_Extension;
 
 /**
