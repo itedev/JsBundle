@@ -82,7 +82,8 @@ class CssRewriteFilter extends BaseCssRewriteFilter
             }
         }
 
-        $content = $this->filterReferences($asset->getContent(), function($matches) use ($host, $path) {
+        $self = $this;
+        $content = $this->filterReferences($asset->getContent(), function($matches) use ($host, $path, $asset, $bundle, $self) {
             if (false !== strpos($matches['url'], '://') || 0 === strpos($matches['url'], '//') || 0 === strpos($matches['url'], 'data:')) {
                 // absolute or protocol-relative or data uri
                 return $matches[0];
@@ -109,6 +110,22 @@ class CssRewriteFilter extends BaseCssRewriteFilter
                 }
             }
 
+            // probably not quite correct code below
+            if (null !== $bundle) {
+                $refName = basename($matches['url']);
+                $refUrl = realpath($asset->getSourceDirectory() . '/' . dirname($matches['url'])) . '/' . $refName;
+                if (preg_match('~(.+)/Resources/public/(.+)~', $refUrl, $refMatches)) {
+                    if (null !== $refBundle = $self->getBundleByPath($refMatches[1])) {
+                        if ($bundle->getPath() !== $refBundle->getPath()) {
+                            $refBundleDir = 'bundles/' . strtolower(substr($refBundle->getName(), 0, -6));
+                            $refSourcePath = $refMatches[2];
+
+                            return str_replace($matches['url'], $path . $refBundleDir . '/' . $refSourcePath, $matches[0]);
+                        }
+                    }
+                }
+            }
+
             return str_replace($matches['url'], implode('/', $parts), $matches[0]);
         });
 
@@ -119,7 +136,7 @@ class CssRewriteFilter extends BaseCssRewriteFilter
      * @param $path
      * @return BundleInterface|null
      */
-    protected function getBundleByPath($path)
+    public function getBundleByPath($path)
     {
         $bundleMap = $this->getBundleMap();
         if (array_key_exists($path, $bundleMap)) {
