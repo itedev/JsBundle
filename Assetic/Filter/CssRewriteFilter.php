@@ -113,14 +113,23 @@ class CssRewriteFilter extends BaseCssRewriteFilter
             // probably not quite correct code below
             if (null !== $bundle) {
                 $refName = basename($matches['url']);
-                $refUrl = realpath($asset->getSourceDirectory() . '/' . dirname($matches['url'])) . '/' . $refName;
-                if (preg_match('~(.+)/Resources/public/(.+)~', $refUrl, $refMatches)) {
+                $refUrl  = realpath($asset->getSourceDirectory().'/'.dirname($matches['url'])).'/'.$refName;
+
+                if (DIRECTORY_SEPARATOR == '/') {
+                    $regExp = '~(.+)/Resources/public/(.+)~';
+                } else {
+                    $regExp = '~(.+)\\\\Resources\\\\public\\\\(.+)~';
+                }
+
+                if (preg_match($regExp, $refUrl, $refMatches)) {
                     if (null !== $refBundle = $self->getBundleByPath($refMatches[1])) {
                         if ($bundle->getPath() !== $refBundle->getPath()) {
                             $refBundleDir = 'bundles/' . strtolower(substr($refBundle->getName(), 0, -6));
                             $refSourcePath = $refMatches[2];
 
-                            return str_replace($matches['url'], $path . $refBundleDir . '/' . $refSourcePath, $matches[0]);
+                            $webPath = str_replace($matches['url'], $path . $refBundleDir . '/' . $refSourcePath, $matches[0]);
+
+                            return str_replace('\\', '/', $webPath);
                         }
                     }
                 }
