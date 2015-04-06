@@ -61,16 +61,33 @@ class AjaxBlockExtension extends SFExtension
         }
 
         $configuration = $request->attributes->get('_ajax_block');
+        if(count($configuration) === 1) {
+            $single = true;
+        } else {
+            $single = false;
+        }
 
         $data = [];
+        /** @var AjaxBlock $annotation */
         foreach ($configuration as $annotation) {
+
+            $content = $this->renderer->render(
+                $this->getTemplate($request, $annotation),
+                $annotation->getBlockName(),
+                $event->getControllerResult()
+            );
+
+            if ($single && !$annotation->getSelector()) {
+                return $content;
+            }
+
+            if (!$annotation->getSelector()) {
+                throw new \InvalidArgumentException('You should specify selector for multiple ajaxBlock annotations.');
+            }
+
             /** @var AjaxBlock $annotation */
             $data[$annotation->getSelector()] = [
-                'content' => $this->renderer->render(
-                    $this->getTemplate($request, $annotation),
-                    $annotation->getBlockName(),
-                    $event->getControllerResult()
-                ),
+                'content' => $content,
                 'show_animation' => [
                     'type' => null === $annotation->getShowAnimation()
                         ? $this->options['show_animation']['type']
