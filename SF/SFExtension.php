@@ -38,17 +38,8 @@ class SFExtension implements SFExtensionInterface
 
     /**
      * @param AjaxRequestEvent $event
-     * @return array
      */
-    public function getAjaxContent(AjaxRequestEvent $event)
-    {
-        return [];
-    }
-
-    /**
-     * @param GetResponseForControllerResultEvent $event
-     */
-    public function onAjaxRequest(GetResponseForControllerResultEvent $event)
+    public function onAjaxRequest(AjaxRequestEvent $event)
     {
         return;
     }

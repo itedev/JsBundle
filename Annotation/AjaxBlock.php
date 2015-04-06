@@ -21,12 +21,12 @@ class AjaxBlock extends ConfigurationAnnotation
     /**
      * @var string
      */
-    protected $template;
+    protected $blockName;
 
     /**
      * @var string
      */
-    protected $blockName;
+    protected $template;
 
     /**
      * @var string
@@ -46,22 +46,6 @@ class AjaxBlock extends ConfigurationAnnotation
     /**
      * @return string
      */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
-    /**
-     * @param string $template
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-    }
-
-    /**
-     * @return string
-     */
     public function getBlockName()
     {
         return $this->blockName;
@@ -73,6 +57,22 @@ class AjaxBlock extends ConfigurationAnnotation
     public function setBlockName($blockName)
     {
         $this->blockName = $blockName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @param string $template
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
     }
 
     /**
@@ -121,6 +121,14 @@ class AjaxBlock extends ConfigurationAnnotation
     public function setShowLength($showLength)
     {
         $this->showLength = $showLength;
+    }
+
+    /**
+     * @param $value
+     */
+    public function setValue($value)
+    {
+        $this->setBlockName($value);
     }
 
     /**

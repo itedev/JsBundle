@@ -53,24 +53,23 @@ class AjaxBlockExtension extends SFExtension
     /**
      * {@inheritdoc}
      */
-    public function getAjaxContent(AjaxRequestEvent $event)
+    public function onAjaxRequest(AjaxRequestEvent $event)
     {
         $request = $event->getRequest();
         if (!$request->attributes->has('_ajax_block')) {
-            return [];
+            return;
         }
 
         $configuration = $request->attributes->get('_ajax_block');
-        if(count($configuration) === 1) {
+        if (count($configuration) === 1) {
             $single = true;
         } else {
             $single = false;
         }
 
-        $data = [];
+        $blocks = [];
         /** @var AjaxBlock $annotation */
         foreach ($configuration as $annotation) {
-
             $content = $this->renderer->render(
                 $this->getTemplate($request, $annotation),
                 $annotation->getBlockName(),
@@ -78,7 +77,8 @@ class AjaxBlockExtension extends SFExtension
             );
 
             if ($single && !$annotation->getSelector()) {
-                return $content;
+                // @todo: ???
+                return;
             }
 
             if (!$annotation->getSelector()) {
@@ -86,7 +86,7 @@ class AjaxBlockExtension extends SFExtension
             }
 
             /** @var AjaxBlock $annotation */
-            $data[$annotation->getSelector()] = [
+            $blocks[$annotation->getSelector()] = [
                 'content' => $content,
                 'show_animation' => [
                     'type' => null === $annotation->getShowAnimation()
@@ -99,7 +99,7 @@ class AjaxBlockExtension extends SFExtension
             ];
         }
 
-        return $data;
+        $event->addAjaxData('blocks', $blocks);
     }
 
     /**

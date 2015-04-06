@@ -35,6 +35,11 @@ class AjaxRequestEvent
     private $controllerResult;
 
     /**
+     * @var array $ajaxData
+     */
+    private $ajaxData = [];
+
+    /**
      * @param GetResponseForControllerResultEvent $event
      */
     public function __construct(GetResponseForControllerResultEvent $event)
@@ -68,5 +73,35 @@ class AjaxRequestEvent
         return $this->controllerResult;
     }
 
+    /**
+     * @return array
+     */
+    public function getAjaxData()
+    {
+        return $this->ajaxData;
+    }
 
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function addAjaxData($name, $value)
+    {
+        if (array_key_exists($name, $this->ajaxData)) {
+            throw new \RuntimeException(sprintf('Key "%s" already exists'));
+        }
+
+        $this->ajaxData[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAjaxData()
+    {
+        return !empty($this->ajaxData);
+    }
 }

@@ -29,14 +29,8 @@ interface SFExtensionInterface
 
     /**
      * @param AjaxRequestEvent $event
-     * @return array
      */
-    public function getAjaxContent(AjaxRequestEvent $event);
-
-    /**
-     * @param GetResponseForControllerResultEvent $event
-     */
-    public function onAjaxRequest(GetResponseForControllerResultEvent $event);
+    public function onAjaxRequest(AjaxRequestEvent $event);
 
     /**
      * @param FilterResponseEvent $event
