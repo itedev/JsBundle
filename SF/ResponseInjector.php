@@ -23,7 +23,7 @@ class ResponseInjector
     /**
      * @param Request $request
      * @param Response $response
-     * @param array $data
+     * @param mixed $data
      */
     public function injectAjaxData(Request $request, Response $response, array $data)
     {
@@ -31,10 +31,15 @@ class ResponseInjector
             ? 'json'
             : $request->getRequestFormat();
 
-        if ('html' !== $request->getRequestFormat()) {
-            $originalData = $this->getSerializer()->decode($response->getContent(), $requestFormat);
+        /** @var Response $responseOverridden */
+        if (null !== ($responseOverridden = $request->attributes->get('_sf_response_overridden'))) {
+            $originalData = $responseOverridden->getContent();
         } else {
-            $originalData = $response->getContent();
+            if ('html' !== $request->getRequestFormat()) {
+                $originalData = $this->getSerializer()->decode($response->getContent(), $requestFormat);
+            } else {
+                $originalData = $response->getContent();
+            }
         }
 
         $prefixedData = [];
@@ -46,7 +51,6 @@ class ResponseInjector
         $content      = $this->getSerializer()->encode($extendedData, $requestFormat);
 
         $response->setContent($content);
-        $response->headers->add(['X-SF-Ajax-Content' => 1]);
     }
 
     /**

@@ -126,8 +126,7 @@
     flashes: new FlashBag(),
     util: {
       processXhr: function(xhr, settings) {
-        // @todo: check if it is needed
-        settings.dataType = 'sf_content';
+
         var routeName = xhr.getResponseHeader('X-SF-Route');
 
         if (routeName) {
@@ -138,6 +137,9 @@
         var data = null;
 
         if ('object' !== typeof rawData) {
+          if(rawData.indexOf('_sf_data') < 0) {
+            return rawData;
+          }
           data = $.parseJSON(rawData);
         } else {
           data = rawData;
@@ -234,7 +236,6 @@
     }
   });
 
-  // @todo: check if it is needed
   $(document).ajaxComplete(function(event, xhr, settings) {
     window.SF.util.processXhr(xhr, settings);
   });

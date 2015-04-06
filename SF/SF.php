@@ -135,10 +135,9 @@ class SF implements SFInterface
      */
     public function onAjaxRequest(GetResponseForControllerResultEvent $event)
     {
-//        $this->collectFlashes();
+        $request = $event->getRequest();
 
         $ajaxRequestEvent = new AjaxRequestEvent($event);
-        $ajaxContent      = [];
 
         foreach ($this->extensions as $name => $extension) {
             /** @var $extension SFExtensionInterface */
@@ -146,7 +145,11 @@ class SF implements SFInterface
         }
 
         if ($ajaxRequestEvent->hasAjaxData()) {
-            $event->getRequest()->attributes->set('_sf_ajax_data', $ajaxRequestEvent->getAjaxData());
+            $request->attributes->set('_sf_ajax_data', $ajaxRequestEvent->getAjaxData());
+        }
+
+        if ($ajaxRequestEvent->isResponseOverridden()) {
+            $request->attributes->set('_sf_response_overridden', $ajaxRequestEvent->getResponse());
         }
     }
 
@@ -156,25 +159,20 @@ class SF implements SFInterface
     public function onAjaxResponse(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
+        $request = $event->getRequest();
 
-//        if (count($this->flashes)) {
-//            $response->headers->set('X-SF-Flashes', json_encode($this->flashes));
-//        }
-//
-//        if ($this->parameters->count()) {
-//            $response->headers->set('X-SF-Parameters', json_encode($this->parameters->all()));
-//        }
-
-        $response->headers->set('X-SF-Route', $event->getRequest()->attributes->get('_route'));
+        $response->headers->set('X-SF-Route', $request->attributes->get('_route'));
 
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
             $extension->onAjaxResponse($event);
         }
 
-        if (null !== $ajaxData = $event->getRequest()->attributes->get('_sf_ajax_data')) {
+        if (null !== ($ajaxData = $request->attributes->get('_sf_ajax_data'))
+                || $request->attributes->has('_sf_response_overridden')
+        ) {
             $responseInjector = new ResponseInjector();
-            $responseInjector->injectAjaxData($event->getRequest(), $response, $ajaxData);
+            $responseInjector->injectAjaxData($request, $response, $ajaxData !== null ? $ajaxData : []);
         }
     }
 

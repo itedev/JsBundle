@@ -13,6 +13,7 @@ use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use ITE\JsBundle\SF\Extension\AjaxBlock\AjaxBlockRenderer;
 use ITE\JsBundle\SF\SFExtension;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\TemplateReference;
 
 /**
@@ -61,6 +62,7 @@ class AjaxBlockExtension extends SFExtension
         }
 
         $configuration = $request->attributes->get('_ajax_block');
+
         if (count($configuration) === 1) {
             $single = true;
         } else {
@@ -77,7 +79,8 @@ class AjaxBlockExtension extends SFExtension
             );
 
             if ($single && !$annotation->getSelector()) {
-                // @todo: ???
+                $event->overrideResponse(new Response($content));
+
                 return;
             }
 

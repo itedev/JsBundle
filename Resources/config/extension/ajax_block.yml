@@ -17,4 +17,4 @@ services:
         class: %ite_js.ajax_block.sf_extension.class%
         arguments: [ @ite_js.ajax_block.renderer, %ite_js.ajax_block.options% ]
         tags:
-            - { name: ite_js.sf.extension, alias: blocks }
+            - { name: ite_js.sf.extension, alias: ajax_block }

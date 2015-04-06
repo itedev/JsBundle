@@ -30,6 +30,11 @@ class AjaxRequestEvent
     private $response;
 
     /**
+     * @var bool
+     */
+    private $responseOverridden = false;
+
+    /**
      * @var mixed
      */
     private $controllerResult;
@@ -44,8 +49,8 @@ class AjaxRequestEvent
      */
     public function __construct(GetResponseForControllerResultEvent $event)
     {
-        $this->request = $event->getRequest();
-        $this->response = $event->getResponse();
+        $this->request          = $event->getRequest();
+        $this->response         = $event->getResponse();
         $this->controllerResult = $event->getControllerResult();
     }
 
@@ -83,7 +88,7 @@ class AjaxRequestEvent
 
     /**
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      * @return $this
      */
     public function addAjaxData($name, $value)
@@ -104,4 +109,26 @@ class AjaxRequestEvent
     {
         return !empty($this->ajaxData);
     }
+
+    /**
+     * @param Response $response
+     */
+    public function overrideResponse(Response $response)
+    {
+        if ($this->responseOverridden) {
+            throw new \InvalidArgumentException('Response has already been overridden.');
+        }
+        $this->response          = $response;
+        $this->responseOverridden = true;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isResponseOverridden()
+    {
+        return $this->responseOverridden;
+    }
+
+
 }
