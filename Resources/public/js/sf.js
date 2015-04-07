@@ -132,25 +132,6 @@
         if (routeName) {
           this.trigger(routeName, true);
         }
-      },
-      parseSfResponse: function(rawData) {
-        var data = null;
-
-        if ('object' !== typeof rawData) {
-          if(rawData.indexOf('_sf_data') < 0) {
-            return rawData;
-          }
-          data = $.parseJSON(rawData);
-        } else {
-          data = rawData;
-        }
-        if(typeof data._sf_data == 'undefined') {
-          return data;
-        }
-
-        $(document).trigger('ite-ajax-loaded.content', data);
-
-        return data._sf_data;
       }
     },
     callbacks: {},
@@ -224,16 +205,58 @@
   $.ajaxSetup({
     beforeSend: function (jqXHR, settings) {
       jqXHR.setRequestHeader('X-SF-Ajax', '1');
-      settings.dataTypes.push('sf_content');
-    },
-    contents: {
-      sf_content: /sf_content/
-    },
-    converters: {
-      "json sf_content": window.SF.util.parseSfResponse,
-      "html sf_content": window.SF.util.parseSfResponse,
-      "xml sf_content": window.SF.util.parseSfResponse
     }
+  });
+
+  $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+    //@todo maybe, another dataType option my exist?
+    var dataType = options.dataTypes[0];
+
+    /**
+     * Injects processor into jQuery ajax functions.
+     *
+     * @param object
+     * @param callbackName
+     */
+    function injectProcessor(object, callbackName) {
+      var originalCallback = object[callbackName];
+
+      if (!originalCallback) {
+        return;
+      }
+
+      object[callbackName] = function () {
+        var originalArguments = $.merge([], arguments);
+
+        if (jqXHR.getResponseHeader('X-SF-Data')) {
+          var data = null;
+
+          if (typeof arguments[0] != 'undefined') {
+            data = arguments[0].promise ? null : arguments[0];
+          }
+
+          if (!data) {
+            data = jqXHR.responseText;
+          }
+
+          if (dataType != 'json' || typeof data == 'string') {
+            data = $.parseJSON(data);
+          }
+
+          $(document).trigger('ite-ajax-loaded.content', data);
+          originalArguments[0] = data._sf_data;
+
+        }
+        originalCallback.apply(this, originalArguments);
+      }
+    }
+
+    injectProcessor(options, 'success');
+    injectProcessor(options, 'error');
+    injectProcessor(jqXHR, 'done');
+    injectProcessor(jqXHR, 'fail');
+    injectProcessor(jqXHR, 'always');
+
   });
 
   $(document).ajaxComplete(function(event, xhr, settings) {

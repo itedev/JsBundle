@@ -51,6 +51,7 @@ class ResponseInjector
         $content      = $this->getSerializer()->encode($extendedData, $requestFormat);
 
         $response->setContent($content);
+        $response->headers->add(['X-SF-Data' => 1]);
     }
 
     /**
