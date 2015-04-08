@@ -2,9 +2,12 @@
 
 namespace ITE\JsBundle\DependencyInjection;
 
+use ITE\Common\Extension\ExtensionFinder;
+use ITE\JsBundle\SF\SFExtensionInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Class Configuration
@@ -12,6 +15,17 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @var ContainerBuilder
+     */
+    private $container;
+
+    public function __construct(ContainerBuilder $container)
+    {
+        $this->container = $container;
+    }
+
+
     /**
      * {@inheritDoc}
      */
@@ -57,6 +71,17 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet();
 
         $this->addAjaxBlockConfiguration($node);
+
+        $container = $this->container;
+        $iteDir = __DIR__.'/../../../../';
+        ExtensionFinder::loadExtensions(
+            function (SFExtensionInterface $extension) use ($rootNode, $container) {
+                $extension->addConfiguration($rootNode, $container);
+            },
+            $iteDir,
+            'ITE\JsBundle\SF\SFExtensionInterface',
+            __DIR__.'/../'
+        );
     }
 
     /**

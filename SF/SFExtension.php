@@ -3,6 +3,8 @@
 namespace ITE\JsBundle\SF;
 
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
@@ -51,4 +53,22 @@ class SFExtension implements SFExtensionInterface
     {
         return;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function loadConfiguration(array $config, ContainerBuilder $container)
+    {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addConfiguration(ArrayNodeDefinition $pluginsNode, ContainerBuilder $container)
+    {
+
+    }
+
+
 } 

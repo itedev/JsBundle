@@ -2,6 +2,7 @@
 
 namespace ITE\JsBundle\SF;
 
+use ITE\Common\DependencyInjection\ExtensionInterface;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -10,7 +11,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
  * Interface SFExtensionInterface
  * @package ITE\JsBundle\SF
  */
-interface SFExtensionInterface
+interface SFExtensionInterface extends ExtensionInterface
 {
     /**
      * @return array

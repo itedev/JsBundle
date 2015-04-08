@@ -2,6 +2,8 @@
 
 namespace ITE\JsBundle\DependencyInjection;
 
+use ITE\Common\Extension\ExtensionFinder;
+use ITE\JsBundle\SF\SFExtensionInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -19,7 +21,7 @@ class ITEJsExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
+        $configuration = new Configuration($container);
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
@@ -28,10 +30,12 @@ class ITEJsExtension extends Extension
 
         $this->loadAsseticConfiguration($loader, $config, $container);
         $this->loadAjaxBlockConfiguration($loader, $config, $container);
+        $this->loadExtensions($config, $container);
     }
 
     /**
      * @param FileLoader       $loader
+
      * @param array            $config
      * @param ContainerBuilder $container
      */
@@ -54,4 +58,31 @@ class ITEJsExtension extends Extension
             $loader->load('assetic/cssrewrite.yml');
         }
     }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    protected function loadExtensions(array $config, ContainerBuilder $container)
+    {
+        $iteDir = __DIR__.'/../../../../';
+        ExtensionFinder::loadExtensions(
+            function (SFExtensionInterface $extension) use ($config, $container) {
+                $extension->loadConfiguration($config, $container);
+            },
+            $iteDir,
+            'ITE\JsBundle\SF\SFExtensionInterface',
+            __DIR__.'/../'
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration($container);
+    }
+
+
 }
