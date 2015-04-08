@@ -70,48 +70,16 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('extensions')
                     ->addDefaultsIfNotSet();
 
-        $this->addAjaxBlockConfiguration($node);
 
         $container = $this->container;
         $iteDir = __DIR__.'/../../../../';
         ExtensionFinder::loadExtensions(
-            function (SFExtensionInterface $extension) use ($rootNode, $container) {
-                $extension->addConfiguration($rootNode, $container);
+            function (SFExtensionInterface $extension) use ($node, $container) {
+                $extension->addConfiguration($node, $container);
             },
             $iteDir,
             'ITE\JsBundle\SF\SFExtensionInterface',
             __DIR__.'/../'
         );
-    }
-
-    /**
-     * @param ArrayNodeDefinition $rootNode
-     */
-    protected function addAjaxBlockConfiguration(ArrayNodeDefinition $rootNode)
-    {
-        $rootNode
-            ->children()
-                ->arrayNode('ajax_block')
-                    ->canBeEnabled()
-                    ->children()
-                        ->arrayNode('show_animation')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->enumNode('type')
-                                    ->defaultValue('show')
-                                    ->values(array('show', 'slide', 'fade'))
-                                    ->info('animation type')
-                                ->end()
-                                ->integerNode('length')
-                                    ->defaultValue(0)
-                                    ->min(0)
-                                    ->info('time in ms')
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end()
-        ;
     }
 }

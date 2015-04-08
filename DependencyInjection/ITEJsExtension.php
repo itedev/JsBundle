@@ -29,7 +29,6 @@ class ITEJsExtension extends Extension
         $loader->load('sf.yml');
 
         $this->loadAsseticConfiguration($loader, $config, $container);
-        $this->loadAjaxBlockConfiguration($loader, $config, $container);
         $this->loadExtensions($config, $container);
     }
 
