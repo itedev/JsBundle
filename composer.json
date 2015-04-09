@@ -19,6 +19,11 @@
     "php": ">=5.4",
     "symfony/symfony": "~2.3-dev"
   },
+  "suggest": {
+    "ite/js-ajax-block": "Provides functional for rendering Twig blocks via AJAX.",
+    "ite/js-notification": "Provide support of display notifications via Javascript",
+    "ite/js-notification-toastr": "ITEJSBundle extension to show notifications via toastr.js"
+  },
   "autoload": {
     "psr-0": {
       "ITE\\JsBundle": ""
