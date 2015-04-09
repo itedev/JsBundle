@@ -2,6 +2,7 @@
 
 namespace ITE\JsBundle\SF;
 
+use ITE\Common\CdnJs\Resource\Reference;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,11 +24,29 @@ class SFExtension implements SFExtensionInterface
     }
 
     /**
+     * @param bool $debug
+     * @return \ITE\Common\CdnJs\Resource\Reference[]
+     */
+    public function getCdnStylesheets($debug)
+    {
+        return [];
+    }
+
+    /**
      * @return array
      */
     public function getJavascripts()
     {
         return array();
+    }
+
+    /**
+     * @param bool $debug
+     * @return \ITE\Common\CdnJs\Resource\Reference[]
+     */
+    public function getCdnJavascripts($debug)
+    {
+        return [];
     }
 
     /**

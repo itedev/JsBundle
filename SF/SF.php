@@ -2,6 +2,8 @@
 
 namespace ITE\JsBundle\SF;
 
+use ITE\Common\CdnJs\ApiWrapper;
+use ITE\Common\CdnJs\Resource\Reference;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -35,7 +37,7 @@ class SF implements SFInterface
     protected $flashes = array();
 
     /**
-     * @var array $extensions
+     * @var SFExtensionInterface[] $extensions
      */
     protected $extensions = array();
 
@@ -127,7 +129,40 @@ class SF implements SFInterface
             $dump .= $extension->dump();
         }
 
-        return '<script>/*<![CDATA[*/ ' . $dump . ' /*]]>*/</script>';
+        $dump = '<script>/*<![CDATA[*/ ' . $dump . ' /*]]>*/</script>';
+
+        return $this->dumpCDN() . $dump;
+    }
+
+    /**
+     * @return string
+     */
+    protected function dumpCDN()
+    {
+        $cdnAssets = '';
+        $debug = $this->container->getParameter('kernel.debug');
+
+        foreach ($this->extensions as $extension) {
+            $references = $extension->getCdnJavascripts($debug);
+            foreach ($references as $reference) {
+                if (!($reference instanceof Reference)) {
+                    throw new \InvalidArgumentException('getCdnJavascripts method should return array of Reference class.');
+                }
+
+                $cdnAssets .= sprintf('<script type="text/javascript" src="%s"></script>', $reference->getUrl());
+            }
+
+            $references = $extension->getCdnStylesheets($debug);
+            foreach ($references as $reference) {
+                if (!($reference instanceof Reference)) {
+                    throw new \InvalidArgumentException('getCdnStylesheets method should return array of Reference class.');
+                }
+
+                $cdnAssets .= sprintf('<link rel="stylesheet" href="%s" />', $reference->getUrl());
+            }
+        }
+
+        return $cdnAssets;
     }
 
     /**

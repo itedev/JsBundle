@@ -49,81 +49,11 @@
 
   ParameterBag.prototype.fn = ParameterBag.prototype;
 
-  // FlashBag
-  var FlashBag = function() {
-    this.flashes = {};
-  };
-
-  FlashBag.prototype = {
-    has: function(type) {
-      return this.flashes.hasOwnProperty(type);
-    },
-
-    keys: function() {
-      var types = [];
-
-      $.each(this.flashes, function(i, type) {
-        types.push(type);
-      });
-
-      return types;
-    },
-
-    add: function(type, message) {
-      if (!this.has(type)) {
-        this.flashes[type] = [];
-      }
-      this.flashes[type].push(message);
-    },
-
-    get: function(type, defaultValue) {
-      defaultValue = defaultValue || [];
-      if (!this.has(type)) {
-        return defaultValue;
-      }
-      var _return = this.flashes[type];
-
-      delete this.flashes[type];
-
-      return _return;
-    },
-
-    set: function(type, messages) {
-      this.flashes[type] = messages;
-    },
-
-    setAll: function(messages) {
-      this.flashes = messages;
-    },
-
-    clear: function() {
-      return this.all();
-    },
-
-    all: function() {
-      var _return = this.peekAll();
-      this.flashes = {};
-      return _return;
-    },
-
-    peek: function(type, defaultValue) {
-      defaultValue = defaultValue || [];
-      return this.has(type) ? this.flashes[type] : defaultValue;
-    },
-
-    peekAll: function() {
-      return this.flashes;
-    }
-  };
-
-  FlashBag.prototype.fn = FlashBag.prototype;
-
   // SF
   var SF = function() {};
 
   SF.prototype = {
     parameters: new ParameterBag(),
-    flashes: new FlashBag(),
     util: {
       processXhr: function(xhr, settings) {
 
@@ -137,8 +67,7 @@
     callbacks: {},
     routeCallbacks: {},
     classes: {
-      ParameterBag: ParameterBag,
-      FlashBag: FlashBag
+      ParameterBag: ParameterBag
     },
     ui : {}
   };

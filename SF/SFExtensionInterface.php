@@ -2,6 +2,7 @@
 
 namespace ITE\JsBundle\SF;
 
+use ITE\Common\CdnJs\Resource\Reference;
 use ITE\Common\DependencyInjection\ExtensionInterface;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -19,9 +20,21 @@ interface SFExtensionInterface extends ExtensionInterface
     public function getStylesheets();
 
     /**
+     * @param bool $debug
+     * @return \ITE\Common\CdnJs\Resource\Reference[]
+     */
+    public function getCdnStylesheets($debug);
+
+    /**
      * @return array
      */
     public function getJavascripts();
+
+    /**
+     * @param bool $debug
+     * @return \ITE\Common\CdnJs\Resource\Reference[]
+     */
+    public function getCdnJavascripts($debug);
 
     /**
      * @return string
