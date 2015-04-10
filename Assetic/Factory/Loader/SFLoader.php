@@ -8,7 +8,8 @@ use ITE\JsBundle\Assetic\Factory\Resource\SFResource;
 
 /**
  * Class SFLoader
- * @package ITE\JsBundle\Assetic\Factory\Loader
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class SFLoader implements FormulaLoaderInterface
 {

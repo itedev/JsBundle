@@ -8,7 +8,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class ITEJsBundle
- * @package ITE\JsBundle
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class ITEJsBundle extends Bundle
 {
@@ -18,6 +19,7 @@ class ITEJsBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new SFExtensionPass());
+
         parent::build($container);
     }
 }

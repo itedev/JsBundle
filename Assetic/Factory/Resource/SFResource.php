@@ -7,7 +7,8 @@ use ITE\JsBundle\SF\SFInterface;
 
 /**
  * Class SFResource
- * @package ITE\JsBundle\Assetic\Factory\Resource
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class SFResource implements ResourceInterface
 {

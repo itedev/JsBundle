@@ -7,12 +7,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
- * Class Plugin
+ * Class AbstractPlugin
  *
- * @package ITE\JsBundle\SF
  * @author  sam0delkin <t.samodelkin@gmail.com>
  */
-class Plugin implements PluginInterface
+abstract class AbstractPlugin implements PluginInterface
 {
     use PluginTrait;
 }

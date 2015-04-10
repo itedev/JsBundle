@@ -17,7 +17,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
  * Class SF
- * @package ITE\JsBundle\SF
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class SF implements SFInterface
 {
@@ -30,11 +31,6 @@ class SF implements SFInterface
      * @var ContainerInterface
      */
     protected $container;
-
-    /**
-     * @var array $flashes
-     */
-    protected $flashes = array();
 
     /**
      * @var SFExtensionInterface[] $extensions

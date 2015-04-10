@@ -12,7 +12,8 @@ use Symfony\Component\DependencyInjection\Loader\FileLoader;
 
 /**
  * Class ITEJsExtension
- * @package ITE\JsBundle\DependencyInjection
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class ITEJsExtension extends Extension
 {
@@ -30,20 +31,6 @@ class ITEJsExtension extends Extension
 
         $this->loadAsseticConfiguration($loader, $config, $container);
         $this->loadExtensions($config, $container);
-    }
-
-    /**
-     * @param FileLoader       $loader
-
-     * @param array            $config
-     * @param ContainerBuilder $container
-     */
-    protected function loadAjaxBlockConfiguration(FileLoader $loader, array $config, ContainerBuilder $container)
-    {
-        if ($config['extensions']['ajax_block']['enabled']) {
-            $container->setParameter('ite_js.ajax_block.options', $config['extensions']['ajax_block']);
-            $loader->load('extension/ajax_block.yml');
-        }
     }
 
     /**

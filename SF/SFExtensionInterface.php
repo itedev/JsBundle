@@ -10,7 +10,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
  * Interface SFExtensionInterface
- * @package ITE\JsBundle\SF
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 interface SFExtensionInterface extends ExtensionInterface, AssetExtensionInterface
 {

@@ -7,7 +7,8 @@ use Twig_Extension;
 
 /**
  * Class SFExtension
- * @package ITE\JsBundle\Twig\Extension
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class SFExtension extends Twig_Extension
 {

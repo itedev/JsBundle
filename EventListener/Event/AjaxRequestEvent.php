@@ -1,10 +1,4 @@
 <?php
-/**
- * This file is created by sam0delkin (t.samodelkin@gmail.com).
- * IT-Excellence (http://itedev.com)
- * Date: 23.03.2015
- * Time: 14:46
- */
 
 namespace ITE\JsBundle\EventListener\Event;
 
@@ -15,7 +9,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 /**
  * Class AjaxRequestEvent
  *
- * @package ITE\JsBundle\EventListener\Event
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class AjaxRequestEvent
 {
@@ -118,6 +112,7 @@ class AjaxRequestEvent
         if ($this->responseOverridden) {
             throw new \InvalidArgumentException('Response has already been overridden.');
         }
+
         $this->response          = $response;
         $this->responseOverridden = true;
     }
@@ -129,6 +124,5 @@ class AjaxRequestEvent
     {
         return $this->responseOverridden;
     }
-
 
 }

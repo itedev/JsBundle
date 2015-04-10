@@ -7,7 +7,6 @@ use ITE\Common\CdnJs\Resource\Reference;
 /**
  * Interface CdnAssetExtensionInterface
  *
- * @package ITE\JsBundle\SF
  * @author  sam0delkin <t.samodelkin@gmail.com>
  */
 interface CdnAssetExtensionInterface

@@ -12,7 +12,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
  * Class SFExtension
- * @package ITE\JsBundle\SF
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class SFExtension implements SFExtensionInterface
 {

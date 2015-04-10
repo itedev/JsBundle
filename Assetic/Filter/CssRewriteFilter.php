@@ -9,7 +9,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class CssRewriteFilter
- * @package ITE\JsBundle\Assetic\Filter
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class CssRewriteFilter extends BaseCssRewriteFilter
 {
@@ -115,17 +116,11 @@ class CssRewriteFilter extends BaseCssRewriteFilter
                 $refName = basename($matches['url']);
                 $refUrl  = realpath($asset->getSourceDirectory().'/'.dirname($matches['url'])).'/'.$refName;
 
-                if (DIRECTORY_SEPARATOR == '/') {
-                    $regExp = '~(.+)/Resources/public/(.+)~';
-                } else {
-                    $regExp = '~(.+)\\\\Resources\\\\public\\\\(.+)~';
-                }
-
-                if (preg_match($regExp, $refUrl, $refMatches)) {
+                if (preg_match('~(.+)([/\\\\])Resources\2public\2(.+)~', $refUrl, $refMatches)) {
                     if (null !== $refBundle = $self->getBundleByPath($refMatches[1])) {
                         if ($bundle->getPath() !== $refBundle->getPath()) {
                             $refBundleDir = 'bundles/' . strtolower(substr($refBundle->getName(), 0, -6));
-                            $refSourcePath = $refMatches[2];
+                            $refSourcePath = $refMatches[3];
 
                             $webPath = str_replace($matches['url'], $path . $refBundleDir . '/' . $refSourcePath, $matches[0]);
 

@@ -2,54 +2,22 @@
 
 namespace ITE\JsBundle\SF;
 
-
+use ITE\Common\DependencyInjection\ExtensionTrait;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * Class SFExtensionTrait
  *
- * @package ITE\JsBundle\SF
  * @author  sam0delkin <t.samodelkin@gmail.com>
  */
 trait SFExtensionTrait
 {
-    /**
-     * @inheritdoc
-     */
-    public function getJavascripts()
-    {
-        return [];
-    }
+    use ExtensionTrait;
+    use AssetExtensionTrait;
 
     /**
-     * @inheritdoc
-     */
-    public function getStylesheets()
-    {
-        return [];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function loadConfiguration(array $config, ContainerBuilder $container)
-    {
-        return;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getConfiguration(ContainerBuilder $container)
-    {
-        return null;
-    }
-
-
-    /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getInlineJavascripts()
     {
@@ -57,18 +25,16 @@ trait SFExtensionTrait
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function onAjaxRequest(AjaxRequestEvent $event)
     {
-        return;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function onAjaxResponse(FilterResponseEvent $event)
     {
-        return;
     }
 }

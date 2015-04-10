@@ -8,7 +8,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
  * Interface SFInterface
- * @package ITE\JsBundle\SF
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 interface SFInterface
 {

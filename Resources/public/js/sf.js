@@ -56,7 +56,6 @@
     parameters: new ParameterBag(),
     util: {
       processXhr: function(xhr, settings) {
-
         var routeName = xhr.getResponseHeader('X-SF-Route');
 
         if (routeName) {
@@ -138,7 +137,7 @@
   });
 
   $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-    //@todo maybe, another dataType option my exist?
+    // @todo: maybe, another dataType option my exist?
     var dataType = options.dataTypes[0];
 
     /**
@@ -160,7 +159,7 @@
         if (jqXHR.getResponseHeader('X-SF-Data')) {
           var data = null;
 
-          if (typeof arguments[0] != 'undefined') {
+          if ('undefined' !== typeof arguments[0] ) {
             data = arguments[0].promise ? null : arguments[0];
           }
 
@@ -168,7 +167,7 @@
             data = jqXHR.responseText;
           }
 
-          if (dataType != 'json' || typeof data == 'string') {
+          if ('json' !== dataType || 'string' === typeof data) {
             data = $.parseJSON(data);
           }
 
@@ -197,7 +196,5 @@
       window.SF.trigger(window.SF.parameters.get('route'));
     }
   });
-
-
 
 })(jQuery);

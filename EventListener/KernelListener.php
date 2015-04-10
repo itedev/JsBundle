@@ -9,7 +9,8 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
  * Class KernelListener
- * @package ITE\JsBundle\EventListener
+ *
+ * @author c1tru55 <mr.c1tru55@gmail.com>
  */
 class KernelListener
 {
@@ -53,6 +54,7 @@ class KernelListener
     protected function isSFAjaxRequest(KernelEvent $event)
     {
         $request = $event->getRequest();
+
         return $event->isMasterRequest()
             && $request->isXmlHttpRequest()
             && $request->headers->has('X-SF-Ajax');
