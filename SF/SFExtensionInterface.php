@@ -12,34 +12,12 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
  * Interface SFExtensionInterface
  * @package ITE\JsBundle\SF
  */
-interface SFExtensionInterface extends ExtensionInterface
+interface SFExtensionInterface extends ExtensionInterface, AssetExtensionInterface
 {
-    /**
-     * @return array
-     */
-    public function getStylesheets();
-
-    /**
-     * @param bool $debug
-     * @return \ITE\Common\CdnJs\Resource\Reference[]
-     */
-    public function getCdnStylesheets($debug);
-
-    /**
-     * @return array
-     */
-    public function getJavascripts();
-
-    /**
-     * @param bool $debug
-     * @return \ITE\Common\CdnJs\Resource\Reference[]
-     */
-    public function getCdnJavascripts($debug);
-
     /**
      * @return string
      */
-    public function dump();
+    public function getInlineJavascripts();
 
     /**
      * @param AjaxRequestEvent $event

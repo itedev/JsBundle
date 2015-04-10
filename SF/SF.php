@@ -126,43 +126,12 @@ class SF implements SFInterface
 
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
-            $dump .= $extension->dump();
+            $dump .= $extension->getInlineJavascripts();
         }
 
         $dump = '<script>/*<![CDATA[*/ ' . $dump . ' /*]]>*/</script>';
 
-        return $this->dumpCDN() . $dump;
-    }
-
-    /**
-     * @return string
-     */
-    protected function dumpCDN()
-    {
-        $cdnAssets = '';
-        $debug = $this->container->getParameter('kernel.debug');
-
-        foreach ($this->extensions as $extension) {
-            $references = $extension->getCdnJavascripts($debug);
-            foreach ($references as $reference) {
-                if (!($reference instanceof Reference)) {
-                    throw new \InvalidArgumentException('getCdnJavascripts method should return array of Reference class.');
-                }
-
-                $cdnAssets .= sprintf('<script type="text/javascript" src="%s"></script>', $reference->getUrl());
-            }
-
-            $references = $extension->getCdnStylesheets($debug);
-            foreach ($references as $reference) {
-                if (!($reference instanceof Reference)) {
-                    throw new \InvalidArgumentException('getCdnStylesheets method should return array of Reference class.');
-                }
-
-                $cdnAssets .= sprintf('<link rel="stylesheet" href="%s" />', $reference->getUrl());
-            }
-        }
-
-        return $cdnAssets;
+        return $dump;
     }
 
     /**
@@ -229,16 +198,4 @@ class SF implements SFInterface
         ));
     }
 
-//    /**
-//     *
-//     */
-//    protected function collectFlashes()
-//    {
-//        /** @var $session SessionInterface */
-//        $session = $this->container->get('session');
-//
-//        if (count($session->getFlashBag()->peekAll())) {
-//            $this->flashes = $session->getFlashBag()->all();
-//        }
-//    }
 }

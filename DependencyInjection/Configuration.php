@@ -75,7 +75,10 @@ class Configuration implements ConfigurationInterface
         $iteDir = __DIR__.'/../../../../';
         ExtensionFinder::loadExtensions(
             function (SFExtensionInterface $extension) use ($node, $container) {
-                $extension->addConfiguration($node, $container);
+                $config = $extension->getConfiguration($container);
+                if ($config) {
+                    $node->append($config);
+                }
             },
             $iteDir,
             'ITE\JsBundle\SF\SFExtensionInterface',
