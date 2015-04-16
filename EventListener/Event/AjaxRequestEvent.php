@@ -19,14 +19,9 @@ class AjaxRequestEvent
     private $request;
 
     /**
-     * @var Response
+     * @var string
      */
-    private $response;
-
-    /**
-     * @var bool
-     */
-    private $responseOverridden = false;
+    private $content;
 
     /**
      * @var mixed
@@ -105,24 +100,34 @@ class AjaxRequestEvent
     }
 
     /**
-     * @param Response $response
+     * Get content
+     *
+     * @return string
      */
-    public function overrideResponse(Response $response)
+    public function getContent()
     {
-        if ($this->responseOverridden) {
-            throw new \InvalidArgumentException('Response has already been overridden.');
-        }
+        return $this->content;
+    }
 
-        $this->response          = $response;
-        $this->responseOverridden = true;
+    /**
+     * Set content
+     *
+     * @param string $content
+     * @return AjaxRequestEvent
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+
+        return $this;
     }
 
     /**
      * @return boolean
      */
-    public function isResponseOverridden()
+    public function hasContent()
     {
-        return $this->responseOverridden;
+        return null !== $this->content;
     }
 
 }

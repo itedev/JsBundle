@@ -147,9 +147,8 @@ class SF implements SFInterface
         if ($ajaxRequestEvent->hasAjaxData()) {
             $request->attributes->set('_sf_ajax_data', $ajaxRequestEvent->getAjaxData());
         }
-
-        if ($ajaxRequestEvent->isResponseOverridden()) {
-            $request->attributes->set('_sf_response_overridden', $ajaxRequestEvent->getResponse());
+        if ($ajaxRequestEvent->hasContent()) {
+            $request->attributes->set('_sf_content', $ajaxRequestEvent->getContent());
         }
     }
 
@@ -168,9 +167,10 @@ class SF implements SFInterface
             $extension->onAjaxResponse($event);
         }
 
-        if (null !== ($ajaxData = $request->attributes->get('_sf_ajax_data'))
-                || $request->attributes->has('_sf_response_overridden')
-        ) {
+        if (null !== $content = $request->attributes->get('_sf_content')) {
+            $response->setContent($content);
+        }
+        if (null !== ($ajaxData = $request->attributes->get('_sf_ajax_data'))) {
             $responseInjector = new ResponseInjector();
             $responseInjector->injectAjaxData($request, $response, $ajaxData !== null ? $ajaxData : []);
         }
