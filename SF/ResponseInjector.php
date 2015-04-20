@@ -33,14 +33,10 @@ class ResponseInjector
             : $request->getRequestFormat();
 
         /** @var Response $responseOverridden */
-        if (null !== ($responseOverridden = $request->attributes->get('_sf_response_overridden'))) {
-            $originalData = $responseOverridden->getContent();
+        if ('html' !== $request->getRequestFormat()) {
+            $originalData = $this->getSerializer()->decode($response->getContent(), $requestFormat);
         } else {
-            if ('html' !== $request->getRequestFormat()) {
-                $originalData = $this->getSerializer()->decode($response->getContent(), $requestFormat);
-            } else {
-                $originalData = $response->getContent();
-            }
+            $originalData = $response->getContent();
         }
 
         $prefixedData = [];
