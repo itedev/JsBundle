@@ -176,6 +176,7 @@
 
         }
         originalCallback.apply(this, originalArguments);
+        $(document).trigger('ite-ajax-after-load.content', data);
       }
     }
 
