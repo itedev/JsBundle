@@ -78,7 +78,7 @@
    * @param {function} callback The callback that will be invoked if route match
    * @param {bool} ajax Specify does this method will be called either with AJAX response.
    */
-  SF.prototype.on = function (routeName, callback, ajax) {
+  SF.prototype.on = function(routeName, callback, ajax) {
     ajax = ajax || false;
     if (typeof this.routeCallbacks[routeName] != 'undefined') {
       this.routeCallbacks[routeName].push({callback: callback, ajax: ajax});
@@ -93,16 +93,16 @@
    * @param {string} routeName
    * @param {bool} ajax
    */
-  SF.prototype.trigger = function (routeName, ajax) {
+  SF.prototype.trigger = function(routeName, ajax) {
     ajax = ajax || false;
-    $.each(this.routeCallbacks, function (name, callbacks) {
+    $.each(this.routeCallbacks, function(name, callbacks) {
       var routeNames = name.split(' ');
 
-      $.each(routeNames, function (key, value) {
+      $.each(routeNames, function(key, value) {
         var regExp = new RegExp(value);
 
         if (regExp.test(routeName)) {
-          $.each(callbacks, function (index, callbackData) {
+          $.each(callbacks, function(index, callbackData) {
             if(callbackData.ajax || (!callbackData.ajax && !ajax)) {
               callbackData.callback.apply();
             }
@@ -131,12 +131,12 @@
   window.SF = new SF();
 
   $.ajaxSetup({
-    beforeSend: function (jqXHR, settings) {
+    beforeSend: function(jqXHR, settings) {
       jqXHR.setRequestHeader('X-SF-Ajax', '1');
     }
   });
 
-  $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+  $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
     // @todo: maybe, another dataType option my exist?
     var dataType = options.dataTypes[0];
 
@@ -148,12 +148,11 @@
      */
     function injectProcessor(object, callbackName) {
       var originalCallback = object[callbackName];
-
       if (!originalCallback) {
         return;
       }
 
-      object[callbackName] = function () {
+      object[callbackName] = function() {
         var originalArguments = $.merge([], arguments);
 
         if (jqXHR.getResponseHeader('X-SF-Data')) {
@@ -162,21 +161,20 @@
           if ('undefined' !== typeof arguments[0] ) {
             data = arguments[0].promise ? null : arguments[0];
           }
-
           if (!data) {
             data = jqXHR.responseText;
           }
-
           if ('json' !== dataType || 'string' === typeof data) {
             data = $.parseJSON(data);
           }
 
           $(document).trigger('ite-ajax-loaded.content', data);
-          originalArguments[0] = data._sf_data;
-
+          originalArguments[0] = data['_sf_data'];
         }
         originalCallback.apply(this, originalArguments);
-        $(document).trigger('ite-ajax-after-load.content', data);
+        if (jqXHR.getResponseHeader('X-SF-Data')) {
+          $(document).trigger('ite-ajax-after-load.content', data);
+        }
       }
     }
 
