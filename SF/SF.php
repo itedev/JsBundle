@@ -6,7 +6,6 @@ use ITE\Common\CdnJs\ApiWrapper;
 use ITE\Common\CdnJs\Resource\Reference;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 class SF implements SFInterface
 {
     /**
-     * @var ParameterBagInterface
+     * @var ParameterBag
      */
     public $parameters;
 
@@ -173,6 +172,14 @@ class SF implements SFInterface
         if (null !== ($ajaxData = $request->attributes->get('_sf_ajax_data'))) {
             $responseInjector = new ResponseInjector();
             $responseInjector->injectAjaxData($request, $response, $ajaxData !== null ? $ajaxData : []);
+        }
+
+        $this->initializeParameters();
+        $response->headers->set('X-SF-Parameters', json_encode($this->parameters->all()));
+
+        if (in_array($response->getStatusCode(), [301, 302, 303, 305, 307])) {
+            $response->headers->set('X-SF-Redirect', $response->headers->get('Location'));
+            $response->setStatusCode(200);
         }
     }
 

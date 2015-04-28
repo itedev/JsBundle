@@ -57,9 +57,20 @@
     util: {
       processXhr: function(xhr, settings) {
         var routeName = xhr.getResponseHeader('X-SF-Route');
+        var parameters = xhr.getResponseHeader('X-SF-Parameters');
+        var redirect = xhr.getResponseHeader('X-SF-Redirect');
 
         if (routeName) {
-          this.trigger(routeName, true);
+          window.SF.trigger(routeName, true);
+        }
+
+        if (parameters) {
+          parameters = $.parseJSON(parameters);
+          window.SF.parameters.add(parameters);
+        }
+
+        if (redirect) {
+          location.href = redirect;
         }
       }
     },
