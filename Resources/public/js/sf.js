@@ -58,7 +58,6 @@
       processXhr: function(xhr, settings) {
         var routeName = xhr.getResponseHeader('X-SF-Route');
         var parameters = xhr.getResponseHeader('X-SF-Parameters');
-        var redirect = xhr.getResponseHeader('X-SF-Redirect');
 
         if (routeName) {
           window.SF.trigger(routeName, true);
@@ -69,9 +68,6 @@
           window.SF.parameters.add(parameters);
         }
 
-        if (redirect) {
-          location.href = redirect;
-        }
       }
     },
     callbacks: {},
@@ -164,6 +160,14 @@
       }
 
       object[callbackName] = function() {
+
+        var redirect = jqXHR.getResponseHeader('X-SF-Redirect');
+
+        if (redirect) {
+          location.href = redirect;
+          return;
+        }
+
         var originalArguments = $.merge([], arguments);
 
         if (jqXHR.getResponseHeader('X-SF-Data')) {
