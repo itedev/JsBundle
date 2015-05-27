@@ -48,7 +48,7 @@ class SFExtension extends Twig_Extension
      */
     public function getName()
     {
-        return 'ite_js.twig.sf_extension';
+        return 'ite_js.twig.extension.sf';
     }
 
 }

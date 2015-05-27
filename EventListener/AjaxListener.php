@@ -8,11 +8,11 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
- * Class KernelListener
+ * Class AjaxListener
  *
  * @author c1tru55 <mr.c1tru55@gmail.com>
  */
-class KernelListener
+class AjaxListener
 {
     /**
      * @var SFInterface

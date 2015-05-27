@@ -1,7 +1,7 @@
 parameters:
     ite_js.sf.class:                    ITE\JsBundle\SF\SF
-    ite_js.kernel_listener.class:       ITE\JsBundle\EventListener\KernelListener
-    ite_js.twig.sf_extension.class:     ITE\JsBundle\Twig\Extension\SFExtension
+    ite_js.event.listener.ajax.class:   ITE\JsBundle\EventListener\AjaxListener
+    ite_js.twig.extension.sf.class:     ITE\JsBundle\Twig\Extension\SFExtension
     ite_js.assetic.sf_resource.class:   ITE\JsBundle\Assetic\Factory\Resource\SFResource
     ite_js.assetic.sf_loader.class:     ITE\JsBundle\Assetic\Factory\Loader\SFLoader
 
@@ -10,15 +10,15 @@ services:
         class: %ite_js.sf.class%
         arguments: [ @service_container ]
 
-    ite_js.kernel_listener:
-        class: %ite_js.kernel_listener.class%
+    ite_js.event.listener.ajax:
+        class: %ite_js.event.listener.ajax.class%
         arguments: [ @ite_js.sf ]
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -255 }
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView, priority: 256 }
 
-    ite_js.twig.sf_extension:
-        class: %ite_js.twig.sf_extension.class%
+    ite_js.twig.extension.sf:
+        class: %ite_js.twig.extension.sf.class%
         arguments: [ @ite_js.sf ]
         tags:
             - { name: twig.extension }

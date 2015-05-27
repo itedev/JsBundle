@@ -135,7 +135,7 @@
 
   SF.prototype.fn = SF.prototype;
 
-  window.SF = new SF();
+  var _SF = window.SF = new SF();
 
   $.ajaxSetup({
     beforeSend: function(jqXHR, settings) {
@@ -202,12 +202,43 @@
   });
 
   $(document).ajaxComplete(function(event, xhr, settings) {
-    window.SF.util.processXhr(xhr, settings);
+    _SF.util.processXhr(xhr, settings);
   });
 
-  $(document).ready(function () {
-    if (window.SF.parameters.has('route')) {
-      window.SF.trigger(window.SF.parameters.get('route'));
+  $(document).ready(function() {
+    $('body').on('click', 'a[data-method]', function(e) {
+      var $this = $(this);
+      e.preventDefault();
+
+      var csrfToken = $this.data('csrfToken');
+
+      var $form = $('<form/>', {
+        method: 'POST',
+        action: $this.attr('href'),
+      });
+
+      var $methodInput = $('<input/>', {
+        name: '_method',
+        type: 'hidden',
+        value: $this.data('method')
+      });
+      $form.append($methodInput);
+
+      if ('undefined' !== typeof csrfToken) {
+        var $csrfInput = $('<input/>', {
+          name: '_csrf_token',
+          type: 'hidden',
+          value: csrfToken
+        });
+        $form.append($csrfInput);
+      }
+
+      $('body').append($form);
+      $form.submit();
+    });
+
+    if (_SF.parameters.has('route')) {
+      _SF.trigger(_SF.parameters.get('route'));
     }
   });
 
