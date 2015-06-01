@@ -48,26 +48,28 @@ class LinkExtension extends Twig_Extension
     /**
      * @param $method
      * @param string $confirm
+     * @param string|null $tokenId
      * @return string
      */
-    public function linkAttributes($method, $confirm = 'Are you sure?')
+    public function linkAttributes($method, $confirm = 'Are you sure?', $tokenId = null)
     {
         $attr = sprintf('data-method="%s"', $method);
         if (false !== $confirm) {
             $attr .= sprintf(' data-confirm="%s"', $confirm);
-        } else {
-            $attr .= ' data-no-confirm';
         }
         
-        return sprintf('%s data-csrf-token="%s"', $attr, $this->linkCsrf());
+        return sprintf('%s data-csrf-token="%s"', $attr, $this->linkCsrf($tokenId));
     }
 
     /**
+     * @param string|null $tokenId
      * @return CsrfToken
      */
-    public function linkCsrf()
+    public function linkCsrf($tokenId = null)
     {
-        return $this->csrfTokenManager->getToken($this->tokenId)->getValue();
+        $tokenId = $tokenId ? $tokenId : $this->tokenId;
+
+        return $this->csrfTokenManager->getToken($tokenId)->getValue();
     }
 
     /**

@@ -51,7 +51,7 @@ class CsrfListener
         }
 
         $tokenId = $csrfSecure->getTokenId();
-        $tokenValue = $request->request->get('_csrf_token');
+        $tokenValue = $request->request->get('_token');
         $token = new CsrfToken($tokenId, $tokenValue);
 
         if (false === $this->csrfTokenManager->isTokenValid($token)) {

@@ -210,6 +210,13 @@
       var $this = $(this);
       e.preventDefault();
 
+      var confirmMessage = $this.data('confirm');
+      if ('undefined' !== typeof confirmMessage) {
+        if (!confirm(confirmMessage)) {
+          return false;
+        }
+      }
+
       var csrfToken = $this.data('csrfToken');
 
       var $form = $('<form/>', {
@@ -226,7 +233,7 @@
 
       if ('undefined' !== typeof csrfToken) {
         var $csrfInput = $('<input/>', {
-          name: '_csrf_token',
+          name: '_token',
           type: 'hidden',
           value: csrfToken
         });
