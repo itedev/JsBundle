@@ -21,6 +21,7 @@
   },
   "suggest": {
     "ite/js-ajax-block": "Provides functional for rendering Twig blocks via AJAX.",
+    "ite/js-csrf-protection": "Provides CSRF protection for links and AJAX requests.",
     "ite/js-notification": "Provide support of display notifications via Javascript",
     "ite/js-notification-toastr": "ITEJSBundle extension to show notifications via toastr.js"
   },

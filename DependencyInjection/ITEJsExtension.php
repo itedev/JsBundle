@@ -28,7 +28,6 @@ class ITEJsExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('sf.yml');
-        $loader->load('services.yml');
 
         $this->loadAsseticConfiguration($loader, $config, $container);
         $this->loadExtensions($config, $container);
