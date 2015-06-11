@@ -60,12 +60,12 @@
         var parameters = xhr.getResponseHeader('X-SF-Parameters');
 
         if (routeName) {
-          window.SF.trigger(routeName, true);
+          _SF.trigger(routeName, true);
         }
 
         if (parameters) {
           parameters = $.parseJSON(parameters);
-          window.SF.parameters.add(parameters);
+          _SF.parameters.add(parameters);
         }
 
       }
@@ -160,9 +160,7 @@
       }
 
       object[callbackName] = function() {
-
         var redirect = jqXHR.getResponseHeader('X-SF-Redirect');
-
         if (redirect) {
           location.href = redirect;
           return;
@@ -186,6 +184,10 @@
           $(document).trigger('ite-ajax-loaded.content', data);
           originalArguments[0] = data['_sf_data'];
         }
+
+        if ('success' === callbackName) {
+          _SF.util.processXhr(jqXHR, options);
+        }
         originalCallback.apply(this, originalArguments);
         if (jqXHR.getResponseHeader('X-SF-Data')) {
           $(document).trigger('ite-ajax-after-load.content', data);
@@ -199,10 +201,6 @@
     injectProcessor(jqXHR, 'fail');
     injectProcessor(jqXHR, 'always');
 
-  });
-
-  $(document).ajaxComplete(function(event, xhr, settings) {
-    _SF.util.processXhr(xhr, settings);
   });
 
   $(document).ready(function() {
