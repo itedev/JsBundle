@@ -4,7 +4,7 @@ namespace ITE\JsBundle\SF;
 
 use ITE\Common\DependencyInjection\ExtensionTrait;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use ITE\JsBundle\EventListener\Event\AjaxResponseEvent;
 
 /**
  * Class SFExtensionTrait
@@ -34,7 +34,7 @@ trait SFExtensionTrait
     /**
      * {@inheritdoc}
      */
-    public function onAjaxResponse(FilterResponseEvent $event)
+    public function onAjaxResponse(AjaxResponseEvent $event)
     {
     }
 }

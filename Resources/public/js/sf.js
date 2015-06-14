@@ -1,7 +1,9 @@
 (function($) {
   // ParameterBag
-  var ParameterBag = function() {
-    this.parameters = {};
+  var ParameterBag = function(parameters) {
+    parameters = parameters || {};
+
+    this.parameters = parameters;
   };
 
   ParameterBag.prototype = {
@@ -22,20 +24,27 @@
     replace: function(parameters) {
       parameters = parameters || {};
       this.parameters = parameters;
+
+      return this;
     },
 
     add: function(parameters) {
       parameters = parameters || {};
-      this.parameters = $.extend(this.parameters, parameters);
+      $.extend(this.parameters, parameters);
+
+      return this;
     },
 
     get: function(name, defaultValue) {
       defaultValue = defaultValue || null;
+
       return this.has(name) ? this.parameters[name] : defaultValue;
     },
 
     set: function(key, value) {
       this.parameters[key] = value;
+
+      return this;
     },
 
     has: function(key) {
@@ -44,36 +53,138 @@
 
     remove: function(key) {
       delete this.parameters[key];
+
+      return this;
     }
   };
 
   ParameterBag.prototype.fn = ParameterBag.prototype;
+
+  // AjaxData
+  var AjaxData = function(data) {
+    this.data = data;
+  };
+
+  AjaxData.prototype = {
+    has: function(name) {
+      return this.data.hasOwnProperty(name);
+    },
+
+    get: function(name, defaultValue) {
+      defaultValue = defaultValue || null;
+
+      return this.has(name) ? this.data[name] : defaultValue;
+    },
+
+    all: function() {
+      return this.data;
+    }
+  };
+
+  // AjaxDataBag
+  var AjaxDataBag = function() {
+    this.requests = {};
+  };
+
+  AjaxDataBag.prototype = {
+    add: function(id, data) {
+      this.requests[id] = new AjaxData(data);
+
+      return this.requests[id];
+    },
+
+    has: function(id) {
+      return this.requests.hasOwnProperty(id);
+    },
+
+    get: function(id, defaultValue) {
+      defaultValue = defaultValue || null;
+
+      return this.has(id) ? this.requests[id] : defaultValue;
+    },
+
+    remove: function(id) {
+      delete this.requests[id];
+
+      return this;
+    }
+  };
+
+  AjaxDataBag.prototype.fn = AjaxDataBag.prototype;
 
   // SF
   var SF = function() {};
 
   SF.prototype = {
     parameters: new ParameterBag(),
-    util: {
-      processXhr: function(xhr, settings) {
-        var routeName = xhr.getResponseHeader('X-SF-Route');
-        var parameters = xhr.getResponseHeader('X-SF-Parameters');
+    ajaxRequests: new AjaxDataBag(),
+    ajaxParameters: function(jqXHR) {
+      var id = jqXHR.sfId;
 
-        if (routeName) {
-          _SF.trigger(routeName, true);
+      var ajaxData = this.requests.get(id);
+      var parameters = ajaxData.get('ajax_parameters', {});
+
+      return new ParameterBag(parameters);
+    },
+    util: {},
+    callbacks: {
+      convert: function(response) {
+        var parentArguments = arguments.callee.caller.arguments;
+
+        var jqXHR = parentArguments[2];
+        var id = jqXHR.sfId;
+
+        var headerData = {};
+        var headers = {};
+        var match;
+        var rx = /^X-SF-(.*?):[ \t]*([^\r\n]*)$/mg;
+        var responseHeadersString = jqXHR.getAllResponseHeaders();
+        while ((match = rx.exec(responseHeadersString))) {
+          headers[match[1].toLowerCase()] = match[2];
         }
 
-        if (parameters) {
-          parameters = $.parseJSON(parameters);
-          _SF.parameters.add(parameters);
-        }
+        $.each(headers, function(name, value) {
+          name = name.replace(/-+/g, '_');
 
+          headerData[name] = $.parseJSON(value);
+        });
+
+        var rawBodyData = {};
+        var hasBodyData = null !== jqXHR.getResponseHeader('X-SF-Body-Data');
+        if (hasBodyData) {
+          if ('string' === typeof response) {
+            // html/text content type
+            rawBodyData = $.parseJSON(response);
+            response = rawBodyData['_sf_data'];
+            delete rawBodyData['_sf_data'];
+          } else if ('object' === typeof response) {
+            // json content type
+            rawBodyData = response;
+            response = response['_sf_data'];
+            delete rawBodyData['_sf_data'];
+          }
+        }
+        var bodyData = {};
+        $.each(rawBodyData, function(name, value) {
+          name = name.replace(/^_sf_/, '');
+
+          bodyData[name] = value;
+        });
+
+        var data = $.extend(true, {}, headerData, bodyData);
+
+        _SF.ajaxRequests.add(id, data);
+
+        $(document).trigger('ite-pre-ajax-complete', data);
+
+        return response;
       }
     },
-    callbacks: {},
     routeCallbacks: {},
     classes: {
-      ParameterBag: ParameterBag
+      ParameterBag: ParameterBag,
+      AjaxDataBag: AjaxDataBag,
+      AjaxData: AjaxData
     },
     ui : {}
   };
@@ -137,76 +248,53 @@
 
   var _SF = window.SF = new SF();
 
+  var jqXhrId = 0;
   $.ajaxSetup({
-    beforeSend: function(jqXHR, settings) {
+    contents: {
+      sf: /sf/
+    },
+    beforeSend: function (jqXHR, settings) {
+      // add custom sf ajax header
       jqXHR.setRequestHeader('X-SF-Ajax', '1');
+      // add custom content type
+      settings.dataTypes.push('sf');
+      // save xhr id
+      jqXHR.sfId = jqXhrId++;
+    },
+    converters: {
+      'html sf': _SF.callbacks.convert,
+      'text sf': _SF.callbacks.convert,
+      'json sf': _SF.callbacks.convert
     }
   });
 
-  $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-    // @todo: maybe, another dataType option my exist?
-    var dataType = options.dataTypes[0];
-
-    /**
-     * Injects processor into jQuery ajax functions.
-     *
-     * @param object
-     * @param callbackName
-     */
-    function injectProcessor(object, callbackName) {
-      var originalCallback = object[callbackName];
-      if (!originalCallback) {
-        return;
-      }
-
-      object[callbackName] = function() {
-        var redirect = jqXHR.getResponseHeader('X-SF-Redirect');
-        if (redirect) {
-          location.href = redirect;
-          return;
-        }
-
-        var originalArguments = $.merge([], arguments);
-
-        if (jqXHR.getResponseHeader('X-SF-Data')) {
-          var data = null;
-
-          if ('undefined' !== typeof arguments[0] ) {
-            data = arguments[0].promise ? null : arguments[0];
-          }
-          if (!data) {
-            data = jqXHR.responseText;
-          }
-          if ('json' !== dataType || 'string' === typeof data) {
-            data = $.parseJSON(data);
-          }
-
-          $(document).trigger('ite-ajax-loaded.content', data);
-          originalArguments[0] = data['_sf_data'];
-        }
-
-        if ('success' === callbackName) {
-          _SF.util.processXhr(jqXHR, options);
-        }
-        originalCallback.apply(this, originalArguments);
-        if (jqXHR.getResponseHeader('X-SF-Data')) {
-          $(document).trigger('ite-ajax-after-load.content', data);
-        }
-      }
-    }
-
-    injectProcessor(options, 'success');
-    injectProcessor(options, 'error');
-    injectProcessor(jqXHR, 'done');
-    injectProcessor(jqXHR, 'fail');
-    injectProcessor(jqXHR, 'always');
-
-  });
-
-  $(document).ready(function() {
+  $(function() {
     if (_SF.parameters.has('route')) {
       _SF.trigger(_SF.parameters.get('route'));
     }
+
+    $(document)
+      .ajaxComplete(function(e, jqXHR, options) {
+        var id = jqXHR.sfId;
+
+        var data = _SF.ajaxRequests.get(id).all();
+
+        $(document).trigger('ite-post-ajax-complete', data);
+
+        _SF.ajaxRequests.remove(id);
+      })
+      .on('ite-pre-ajax-complete', function(e, data) {
+        if (data.hasOwnProperty('redirect')) {
+          window.location.href = data['redirect'];
+        }
+        if (data.hasOwnProperty('route')) {
+          _SF.trigger(data['route'], true);
+        }
+        if (data.hasOwnProperty('parameters')) {
+          _SF.parameters.add(data['parameters']);
+        }
+      })
+      ;
   });
 
 })(jQuery);

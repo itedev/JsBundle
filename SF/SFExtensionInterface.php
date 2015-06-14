@@ -2,11 +2,9 @@
 
 namespace ITE\JsBundle\SF;
 
-use ITE\Common\CdnJs\Resource\Reference;
 use ITE\Common\DependencyInjection\ExtensionInterface;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use ITE\JsBundle\EventListener\Event\AjaxResponseEvent;
 
 /**
  * Interface SFExtensionInterface
@@ -26,7 +24,7 @@ interface SFExtensionInterface extends ExtensionInterface, AssetExtensionInterfa
     public function onAjaxRequest(AjaxRequestEvent $event);
 
     /**
-     * @param FilterResponseEvent $event
+     * @param AjaxResponseEvent $event
      */
-    public function onAjaxResponse(FilterResponseEvent $event);
+    public function onAjaxResponse(AjaxResponseEvent $event);
 }

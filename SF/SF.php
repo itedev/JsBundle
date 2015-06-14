@@ -5,6 +5,7 @@ namespace ITE\JsBundle\SF;
 use ITE\Common\CdnJs\ApiWrapper;
 use ITE\Common\CdnJs\Resource\Reference;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
+use ITE\JsBundle\EventListener\Event\AjaxResponseEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,11 @@ class SF implements SFInterface
     public $parameters;
 
     /**
+     * @var AjaxDataBag
+     */
+    protected $ajaxDataBag;
+
+    /**
      * @var ContainerInterface
      */
     protected $container;
@@ -34,7 +40,7 @@ class SF implements SFInterface
     /**
      * @var SFExtensionInterface[] $extensions
      */
-    protected $extensions = array();
+    protected $extensions = [];
 
     /**
      * @param ContainerInterface $container
@@ -43,6 +49,7 @@ class SF implements SFInterface
     {
         $this->container = $container;
         $this->parameters = new ParameterBag();
+        $this->ajaxDataBag = new AjaxDataBag();
     }
 
     /**
@@ -64,6 +71,7 @@ class SF implements SFInterface
         if (!$this->hasExtension($name)) {
             $this->extensions[$name] = $extension;
         }
+
         return $this;
     }
 
@@ -86,7 +94,7 @@ class SF implements SFInterface
      */
     public function getStylesheets()
     {
-        $inputs = array();
+        $inputs = [];
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
             $inputs = array_merge($inputs, $extension->getStylesheets());
@@ -100,7 +108,7 @@ class SF implements SFInterface
      */
     public function getJavascripts()
     {
-        $inputs = array('@ITEJsBundle/Resources/public/js/sf.js');
+        $inputs = ['@ITEJsBundle/Resources/public/js/sf.js'];
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
             $inputs = array_merge($inputs, $extension->getJavascripts());
@@ -134,18 +142,13 @@ class SF implements SFInterface
      */
     public function onAjaxRequest(GetResponseForControllerResultEvent $event)
     {
-        $request = $event->getRequest();
-
-        $ajaxRequestEvent = new AjaxRequestEvent($event);
-
+        $ajaxRequestEvent = new AjaxRequestEvent($event, $this->ajaxDataBag);
         foreach ($this->extensions as $name => $extension) {
             /** @var $extension SFExtensionInterface */
             $extension->onAjaxRequest($ajaxRequestEvent);
         }
 
-        if ($ajaxRequestEvent->hasAjaxData()) {
-            $request->attributes->set('_sf_ajax_data', $ajaxRequestEvent->getAjaxData());
-        }
+        $request = $event->getRequest();
         if ($ajaxRequestEvent->hasContent()) {
             $request->attributes->set('_sf_content', $ajaxRequestEvent->getContent());
         }
@@ -156,36 +159,40 @@ class SF implements SFInterface
      */
     public function onAjaxResponse(FilterResponseEvent $event)
     {
+        $ajaxResponseEvent = new AjaxResponseEvent($event, $this->ajaxDataBag);
+        foreach ($this->extensions as $extension) {
+            /** @var $extension SFExtensionInterface */
+            $extension->onAjaxResponse($ajaxResponseEvent);
+        }
+
         $response = $event->getResponse();
         $request = $event->getRequest();
 
-        $response->headers->set('X-SF-Route', $request->attributes->get('_route'));
-
-        foreach ($this->extensions as $extension) {
-            /** @var $extension SFExtensionInterface */
-            $extension->onAjaxResponse($event);
+        $this->ajaxDataBag
+            ->addHeaderData('parameters', $this->parameters->all())
+            ->addHeaderData('route', $request->attributes->get('_route'))
+        ;
+        if (in_array($response->getStatusCode(), [301, 302, 303, 305, 307])) {
+            $this->ajaxDataBag->addHeaderData('redirect', $response->headers->get('Location'));
+            $response->setStatusCode(200);
         }
 
         if (null !== $content = $request->attributes->get('_sf_content')) {
             $response->setContent($content);
         }
-        if (null !== ($ajaxData = $request->attributes->get('_sf_ajax_data'))) {
-            $responseInjector = new ResponseInjector();
-            $responseInjector->injectAjaxData($request, $response, $ajaxData !== null ? $ajaxData : []);
-        }
 
-        $this->initializeParameters();
-        $response->headers->set('X-SF-Parameters', json_encode($this->parameters->all()));
-
-        if (in_array($response->getStatusCode(), [301, 302, 303, 305, 307])) {
-            $response->headers->set('X-SF-Redirect', $response->headers->get('Location'));
-            $response->setStatusCode(200);
+        $responseInjector = new ResponseInjector();
+        // add ajax header data
+        $responseInjector->injectHeaderData($response, $this->ajaxDataBag->getHeaderData());
+        // add ajax body data
+        if ($this->ajaxDataBag->bodyDataCount()) {
+            $responseInjector->injectBodyData($request, $response, $this->ajaxDataBag->getBodyData());
         }
     }
 
     public function __sleep()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -193,12 +200,12 @@ class SF implements SFInterface
      */
     protected function initializeParameters()
     {
-        $this->parameters->add(array(
+        $this->parameters->add([
             'kernel.environment' => $this->container->getParameter('kernel.environment'),
             'kernel.debug' => $this->container->getParameter('kernel.debug'),
             'locale' => $this->container->getParameter('locale'),
             'route' => $this->container->get('request_stack')->getMasterRequest()->attributes->get('_route'),
-        ));
+        ]);
     }
 
 }
