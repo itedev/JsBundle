@@ -121,7 +121,7 @@
     ajaxParameters: function(jqXHR) {
       var id = jqXHR.sfId;
 
-      var ajaxData = this.requests.get(id);
+      var ajaxData = this.ajaxRequests.get(id);
       var parameters = ajaxData.get('ajax_parameters', {});
 
       return new ParameterBag(parameters);
