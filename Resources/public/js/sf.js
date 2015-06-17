@@ -287,11 +287,13 @@
         if (data.hasOwnProperty('redirect')) {
           window.location.href = data['redirect'];
         }
-        if (data.hasOwnProperty('route')) {
-          _SF.trigger(data['route'], true);
-        }
         if (data.hasOwnProperty('parameters')) {
           _SF.parameters.add(data['parameters']);
+        }
+      })
+      .on('ite-post-ajax-complete', function(e, data) {
+        if (data.hasOwnProperty('route')) {
+          _SF.trigger(data['route'], true);
         }
       })
       ;
