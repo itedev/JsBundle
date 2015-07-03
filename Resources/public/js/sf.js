@@ -126,7 +126,21 @@
 
       return new ParameterBag(parameters);
     },
-    util: {},
+    util: {
+      extend: function(Child, Parent, methods) {
+        methods = methods || {};
+
+        Child.prototype = Object.create(Parent.prototype);
+        Child.prototype.constructor = Child;
+        Child.superclass = Parent.prototype;
+
+        $.each(methods, function(name, method) {
+          Child.prototype[name] = method;
+        });
+
+        return Child;
+      }
+    },
     callbacks: {
       convert: function(response) {
         var parentArguments = arguments.callee.caller.arguments;
@@ -296,7 +310,7 @@
           _SF.trigger(data['route'], true);
         }
       })
-      ;
+    ;
   });
 
 })(jQuery);
