@@ -60,6 +60,32 @@
 
   ParameterBag.prototype.fn = ParameterBag.prototype;
 
+  var ServiceContainer = function() {
+    this.services = {};
+  };
+
+  ServiceContainer.prototype = {
+    has: function(id) {
+      return this.services.hasOwnProperty(id);
+    },
+
+    get: function(id) {
+      if (!this.has(id)) {
+        // error
+      }
+
+      return this.services[id];
+    },
+
+    set: function(id, service) {
+      this.services[id] = service;
+
+      return this;
+    }
+  };
+
+  ServiceContainer.prototype.fn = ServiceContainer.prototype;
+
   // AjaxData
   var AjaxData = function(data) {
     this.data = data;
@@ -113,7 +139,9 @@
   AjaxDataBag.prototype.fn = AjaxDataBag.prototype;
 
   // SF
-  var SF = function() {};
+  var SF = function() {
+    this.services = new ServiceContainer();
+  };
 
   SF.prototype = {
     parameters: new ParameterBag(),
@@ -197,6 +225,7 @@
     routeCallbacks: {},
     classes: {
       ParameterBag: ParameterBag,
+      ServiceContainer: ServiceContainer,
       AjaxDataBag: AjaxDataBag,
       AjaxData: AjaxData
     },
