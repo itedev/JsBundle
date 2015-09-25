@@ -241,7 +241,7 @@
    */
   SF.prototype.on = function(routeName, callback, ajax) {
     ajax = ajax || false;
-    if (typeof this.routeCallbacks[routeName] != 'undefined') {
+    if ('undefined' !== typeof this.routeCallbacks[routeName]) {
       this.routeCallbacks[routeName].push({callback: callback, ajax: ajax});
     } else {
       this.routeCallbacks[routeName] = [{callback: callback, ajax: ajax}];
@@ -264,8 +264,8 @@
 
         if (regExp.test(routeName)) {
           $.each(callbacks, function(index, callbackData) {
-            if(callbackData.ajax || (!callbackData.ajax && !ajax)) {
-              callbackData.callback.apply();
+            if (callbackData.ajax || (!callbackData.ajax && !ajax)) {
+              callbackData.callback.apply(window, [routeName]);
             }
           });
         }
