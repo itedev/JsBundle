@@ -31,7 +31,7 @@ class SFExtensionPass implements CompilerPassInterface
         $taggedServices = $container->findTaggedServiceIds('ite_js.sf.extension');
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
-                $definition->addMethodCall('addExtension', array($attributes['alias'], new Reference($id)));
+                $definition->addMethodCall('addExtension', [$attributes['alias'], new Reference($id)]);
             }
         }
 
@@ -66,7 +66,7 @@ class SFExtensionPass implements CompilerPassInterface
                 foreach ($finder as $file) {
                     // filename is domain.locale.format
                     list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-                    $translator->addMethodCall('addResource', array($format, (string) $file, $locale, $domain));
+                    $translator->addMethodCall('addResource', [$format, (string) $file, $locale, $domain]);
                 }
             },
             $iteDir,

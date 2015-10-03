@@ -32,7 +32,7 @@ Configuration
 Usage
 -----
 
-This bundle allows its extensions to add stylesheets and javascripts. To enable this feature, add `ite_js_sf_assets()` functions in your `stylesheets` or/and `javascripts` tags of your template. To dump all needed data for SF object in one inline js, add `{{ ite_js_sf_dump() }}` expression after corresponding `javascripts` tag.
+This bundle allows its extensions to add stylesheets and javascripts. To enable this feature, add `ite_js_sf_assets()` functions in your `stylesheets` or/and `javascripts` tags of your template. To dump all needed data for SF object in one inline js, add `{{ ite_sf_dump() }}` expression after corresponding `javascripts` tag.
 
 .. code-block:: html+jinja
 
@@ -53,7 +53,7 @@ This bundle allows its extensions to add stylesheets and javascripts. To enable 
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-    {{ ite_js_sf_dump() }}
+    {{ ite_sf_dump() }}
 
 Service 'ite_js.sf'
 -------------------

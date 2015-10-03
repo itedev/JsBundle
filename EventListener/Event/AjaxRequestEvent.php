@@ -72,5 +72,4 @@ class AjaxRequestEvent extends AjaxEvent
     {
         return null !== $this->content;
     }
-
 }

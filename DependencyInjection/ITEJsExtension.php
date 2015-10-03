@@ -69,6 +69,4 @@ class ITEJsExtension extends Extension
     {
         return new Configuration($container);
     }
-
-
 }

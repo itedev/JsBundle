@@ -38,18 +38,18 @@ class SFResource implements ResourceInterface
      */
     public function getContent()
     {
-        return array(
-            'sf_stylesheets' => array(
+        return [
+            'sf_stylesheets' => [
                 $this->sf->getStylesheets(),
-                array(),
-                array()
-            ),
-            'sf_javascripts' => array(
+                [],
+                []
+            ],
+            'sf_javascripts' => [
                 $this->sf->getJavascripts(),
-                array(),
-                array()
-            ),
-        );
+                [],
+                []
+            ],
+        ];
     }
 
     /**

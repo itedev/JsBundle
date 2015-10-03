@@ -9,13 +9,5 @@ namespace ITE\JsBundle\SF;
  */
 interface AssetExtensionInterface
 {
-    /**
-     * @return []
-     */
-    public function getJavascripts();
 
-    /**
-     * @return []
-     */
-    public function getStylesheets();
 }

@@ -242,9 +242,15 @@
   SF.prototype.on = function(routeName, callback, ajax) {
     ajax = ajax || false;
     if ('undefined' !== typeof this.routeCallbacks[routeName]) {
-      this.routeCallbacks[routeName].push({callback: callback, ajax: ajax});
+      this.routeCallbacks[routeName].push({
+        callback: callback,
+        ajax: ajax
+      });
     } else {
-      this.routeCallbacks[routeName] = [{callback: callback, ajax: ajax}];
+      this.routeCallbacks[routeName] = [{
+        callback: callback,
+        ajax: ajax
+      }];
     }
   };
 
@@ -270,7 +276,6 @@
           });
         }
       });
-
     });
   };
 

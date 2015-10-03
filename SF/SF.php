@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
@@ -84,19 +83,19 @@ class SF implements SFInterface
     /**
      * @param $name
      * @return SFExtensionInterface
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function getExtension($name)
     {
         if (!$this->hasExtension($name)) {
-            throw new InvalidArgumentException();
+            throw new \InvalidArgumentException();
         }
 
         return $this->extensions[$name];
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getStylesheets()
     {
@@ -110,7 +109,7 @@ class SF implements SFInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getJavascripts()
     {
@@ -121,6 +120,34 @@ class SF implements SFInterface
         }
 
         return $inputs;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCdnStylesheets($debug)
+    {
+        $stylesheets = [];
+        foreach ($this->extensions as $extension) {
+            /** @var $extension SFExtensionInterface */
+            $stylesheets = array_merge($stylesheets, $extension->getCdnStylesheets($debug));
+        }
+
+        return $stylesheets;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCdnJavascripts($debug)
+    {
+        $javascripts = [];
+        foreach ($this->extensions as $extension) {
+            /** @var $extension SFExtensionInterface */
+            $javascripts = array_merge($javascripts, $extension->getCdnJavascripts($debug));
+        }
+
+        return $javascripts;
     }
 
     /**
@@ -135,7 +162,7 @@ class SF implements SFInterface
 
         foreach ($this->extensions as $extension) {
             /** @var $extension SFExtensionInterface */
-            $dump .= $extension->getInlineJavascripts();
+            $dump .= $extension->dump();
         }
 
         $dump = '<script>/*<![CDATA[*/ ' . $dump . ' /*]]>*/</script>';
@@ -214,5 +241,4 @@ class SF implements SFInterface
             'route' => $this->container->get('request_stack')->getMasterRequest()->attributes->get('_route'),
         ]);
     }
-
 }

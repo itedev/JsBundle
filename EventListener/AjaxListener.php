@@ -59,5 +59,4 @@ class AjaxListener
             && $request->isXmlHttpRequest()
             && $request->headers->has('X-SF-Ajax');
     }
-
 }

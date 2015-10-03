@@ -21,11 +21,13 @@ class Configuration implements ConfigurationInterface
      */
     private $container;
 
+    /**
+     * @param ContainerBuilder $container
+     */
     public function __construct(ContainerBuilder $container)
     {
         $this->container = $container;
     }
-
 
     /**
      * {@inheritDoc}
@@ -70,7 +72,6 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('extensions')
                     ->addDefaultsIfNotSet();
-
 
         $container = $this->container;
         $iteDir = __DIR__.'/../../../../';

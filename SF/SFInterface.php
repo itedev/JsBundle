@@ -2,7 +2,7 @@
 
 namespace ITE\JsBundle\SF;
 
-use InvalidArgumentException;
+use ITE\Common\CdnJs\CdnAssetReference;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
@@ -29,7 +29,7 @@ interface SFInterface
     /**
      * @param $name
      * @return SFExtensionInterface
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function getExtension($name);
 
@@ -42,6 +42,18 @@ interface SFInterface
      * @return array
      */
     public function getJavascripts();
+
+    /**
+     * @param bool $debug
+     * @return array|CdnAssetReference[]
+     */
+    public function getCdnStylesheets($debug);
+
+    /**
+     * @param bool $debug
+     * @return array|CdnAssetReference[]
+     */
+    public function getCdnJavascripts($debug);
 
     /**
      * @return string
