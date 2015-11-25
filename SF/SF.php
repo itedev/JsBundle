@@ -208,6 +208,7 @@ class SF implements SFInterface
         ;
         if (in_array($response->getStatusCode(), [301, 302, 303, 305, 307])) {
             $this->ajaxDataBag->addHeaderData('redirect', $response->headers->get('Location'));
+            $response->headers->remove('Location');
             $response->setStatusCode(200);
         }
 
