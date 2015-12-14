@@ -12,6 +12,11 @@ use ITE\JsBundle\Utils\Inflector;
 class AjaxDataBag
 {
     /**
+     * @var string $originalResponse
+     */
+    private $originalResponse;
+
+    /**
      * @var array
      */
     private $headerData = [];
@@ -115,6 +120,29 @@ class AjaxDataBag
     }
 
     /**
+     * Get originalResponse
+     *
+     * @return string
+     */
+    public function getOriginalResponse()
+    {
+        return $this->originalResponse;
+    }
+
+    /**
+     * Set originalResponse
+     *
+     * @param string $originalResponse
+     * @return AjaxDataBag
+     */
+    public function setOriginalResponse($originalResponse)
+    {
+        $this->originalResponse = $originalResponse;
+
+        return $this;
+    }
+
+    /**
      * @param AjaxDataBag $ajaxDataBag
      * @return $this
      */
@@ -127,7 +155,8 @@ class AjaxDataBag
             $this->addBodyData($name, $value);
         }
 
+        $this->setOriginalResponse($ajaxDataBag->getOriginalResponse());
+
         return $this;
     }
-
 }

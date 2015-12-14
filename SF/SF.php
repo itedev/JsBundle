@@ -199,6 +199,11 @@ class SF implements SFInterface
         }
 
         $response = $event->getResponse();
+
+        if (null !== $originalResponseContent = $ajaxResponseEvent->getAjaxDataBag()->getOriginalResponse()) {
+            $response->setContent($originalResponseContent);
+        }
+
         $request = $event->getRequest();
 
         $this->ajaxDataBag
