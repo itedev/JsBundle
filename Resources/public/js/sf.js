@@ -241,6 +241,8 @@
    */
   SF.prototype.on = function(routeName, callback, ajax) {
     ajax = ajax || false;
+    routeName = '*' === routeName ? '.+' : routeName;
+
     if ('undefined' !== typeof this.routeCallbacks[routeName]) {
       this.routeCallbacks[routeName].push({
         callback: callback,
