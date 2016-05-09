@@ -154,6 +154,7 @@
 
       return new ParameterBag(parameters);
     },
+    initialize: function () {},
     util: {
       extend: function(Child, Parent, methods) {
         methods = methods || {};
@@ -322,6 +323,7 @@
     if (_SF.parameters.has('route')) {
       _SF.trigger(_SF.parameters.get('route'));
     }
+    _SF.initialize();
 
     $(document)
       .ajaxComplete(function(e, jqXHR, options) {
