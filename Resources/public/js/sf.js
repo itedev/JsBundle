@@ -318,35 +318,35 @@
     }
   });
 
+  $(document)
+    .ajaxComplete(function(e, jqXHR, options) {
+      var id = jqXHR.sfId;
+
+      var data = _SF.ajaxRequests.get(id).all();
+
+      $(document).trigger('ite-post-ajax-complete', data);
+
+      _SF.ajaxRequests.remove(id);
+    })
+    .on('ite-pre-ajax-complete', function(e, data) {
+      if (data.hasOwnProperty('redirect')) {
+        window.location.href = data['redirect'];
+      }
+      if (data.hasOwnProperty('parameters')) {
+        _SF.parameters.add(data['parameters']);
+      }
+    })
+    .on('ite-post-ajax-complete', function(e, data) {
+      if (data.hasOwnProperty('route')) {
+        _SF.trigger(data['route'], true);
+      }
+    })
+  ;
+
   $(function() {
     if (_SF.parameters.has('route')) {
       _SF.trigger(_SF.parameters.get('route'));
     }
-
-    $(document)
-      .ajaxComplete(function(e, jqXHR, options) {
-        var id = jqXHR.sfId;
-
-        var data = _SF.ajaxRequests.get(id).all();
-
-        $(document).trigger('ite-post-ajax-complete', data);
-
-        _SF.ajaxRequests.remove(id);
-      })
-      .on('ite-pre-ajax-complete', function(e, data) {
-        if (data.hasOwnProperty('redirect')) {
-          window.location.href = data['redirect'];
-        }
-        if (data.hasOwnProperty('parameters')) {
-          _SF.parameters.add(data['parameters']);
-        }
-      })
-      .on('ite-post-ajax-complete', function(e, data) {
-        if (data.hasOwnProperty('route')) {
-          _SF.trigger(data['route'], true);
-        }
-      })
-    ;
   });
 
 })(jQuery);
