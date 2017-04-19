@@ -2,7 +2,7 @@
 
 namespace ITE\JsBundle\SF;
 
-use ITE\Common\CdnJs\Resource\Reference;
+use ITE\Common\CdnJs\CdnAssetReference;
 
 /**
  * Interface CdnAssetExtensionInterface
@@ -13,15 +13,13 @@ interface CdnAssetExtensionInterface
 {
     /**
      * @param bool $debug
-     *
-     * @return Reference[]
+     * @return array|CdnAssetReference[]
      */
     public function getCdnJavascripts($debug);
 
     /**
      * @param bool $debug
-     *
-     * @return Reference[]
+     * @return array|CdnAssetReference[]
      */
     public function getCdnStylesheets($debug);
 

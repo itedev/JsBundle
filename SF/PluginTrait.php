@@ -7,7 +7,7 @@ use ITE\Common\DependencyInjection\ExtensionTrait;
 /**
  * Class PluginTrait
  *
- * @author  sam0delkin <t.samodelkin@gmail.com>
+ * @author sam0delkin <t.samodelkin@gmail.com>
  */
 trait PluginTrait
 {

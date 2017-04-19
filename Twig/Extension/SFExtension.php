@@ -62,7 +62,7 @@ class SFExtension extends Twig_Extension
         $debug = null !== $debug ? $debug : $this->debug;
 
         $stylesheets = $this->sf->getCdnStylesheets($debug);
-        $stylesheets = array_map(function(CdnAssetReference $stylesheet) {
+        $stylesheets = array_map(function (CdnAssetReference $stylesheet) {
             return sprintf('<link href="%s" type="text/css" rel="stylesheet" media="screen" />', (string) $stylesheet);
         }, $stylesheets);
 
@@ -78,7 +78,7 @@ class SFExtension extends Twig_Extension
         $debug = null !== $debug ? $debug : $this->debug;
 
         $javascripts = $this->sf->getCdnJavascripts($debug);
-        $javascripts = array_map(function(CdnAssetReference $javascript) {
+        $javascripts = array_map(function (CdnAssetReference $javascript) {
             return sprintf('<script type="text/javascript" src="%s"></script>', (string) $javascript);
         }, $javascripts);
 
