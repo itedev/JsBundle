@@ -185,6 +185,11 @@ class SF implements SFInterface
         if ($ajaxRequestEvent->hasContent()) {
             $request->attributes->set('_sf_content', $ajaxRequestEvent->getContent());
         }
+
+        if ($ajaxRequestEvent->isParentEventPropagationStopped()) {
+            $event->setResponse($ajaxRequestEvent->getResponse() ?: new Response());
+            $event->stopPropagation();
+        }
     }
 
     /**

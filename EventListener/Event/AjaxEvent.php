@@ -32,6 +32,11 @@ class AjaxEvent
     private $ajaxDataBag;
 
     /**
+     * @var bool
+     */
+    private $parentEventPropagationStopped = false;
+
+    /**
      * @param KernelEvent $event
      * @param AjaxDataBag $ajaxDataBag
      */
@@ -72,5 +77,23 @@ class AjaxEvent
     public function getAjaxDataBag()
     {
         return $this->ajaxDataBag;
+    }
+
+    /**
+     * @return $this
+     */
+    public function stopParentEventPropagation()
+    {
+        $this->parentEventPropagationStopped = true;
+    }
+
+    /**
+     * Get parentEventPropagationStopped
+     *
+     * @return bool
+     */
+    public function isParentEventPropagationStopped()
+    {
+        return $this->parentEventPropagationStopped;
     }
 }
