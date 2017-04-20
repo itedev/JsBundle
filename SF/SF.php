@@ -2,8 +2,6 @@
 
 namespace ITE\JsBundle\SF;
 
-use ITE\Common\CdnJs\ApiWrapper;
-use ITE\Common\CdnJs\Resource\Reference;
 use ITE\JsBundle\EventListener\Event\AjaxRequestEvent;
 use ITE\JsBundle\EventListener\Event\AjaxResponseEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
