@@ -180,7 +180,7 @@
         var headerData = {};
         var headers = {};
         var match;
-        var rx = /^X-SF-(.*?):[ \t]*([^\r\n]*)$/mg;
+        var rx = /^X-SF-(.*?):[ \t]*([^\r\n]*)$/mgi;
         var responseHeadersString = jqXHR.getAllResponseHeaders();
         while ((match = rx.exec(responseHeadersString))) {
           headers[match[1].toLowerCase()] = match[2];
