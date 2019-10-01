@@ -322,12 +322,15 @@
   $(document)
     .ajaxComplete(function(e, jqXHR, options) {
       var id = jqXHR.sfId;
+      var request = _SF.ajaxRequests.get(id);
 
-      var data = _SF.ajaxRequests.get(id).all();
+      if (request) {
+        var data = request.all();
 
-      $(document).trigger('ite-post-ajax-complete', data);
+        $(document).trigger('ite-post-ajax-complete', data);
 
-      _SF.ajaxRequests.remove(id);
+        _SF.ajaxRequests.remove(id);
+      }
     })
     .on('ite-pre-ajax-complete', function(e, data) {
       if (data.hasOwnProperty('redirect')) {
