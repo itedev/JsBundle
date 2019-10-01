@@ -93,6 +93,38 @@ class SF implements SFInterface
     }
 
     /**
+     * Get parameters
+     *
+     * @return ParameterBag
+     */
+    public function getParameters(): ParameterBag
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function setParameter($name, $value)
+    {
+        $this->parameters->set($name, $value);
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed|null $defaultValue
+     * @return mixed
+     */
+    public function getParameter($name, $defaultValue = null)
+    {
+        return $this->parameters->get($name, $defaultValue);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getStylesheets()

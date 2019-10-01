@@ -3,6 +3,7 @@
 namespace ITE\JsBundle\SF;
 
 use ITE\Common\CdnJs\CdnAssetReference;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
@@ -32,6 +33,25 @@ interface SFInterface
      * @throws \InvalidArgumentException
      */
     public function getExtension($name);
+
+    /**
+     * @return ParameterBag
+     */
+    public function getParameters();
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function setParameter($name, $value);
+
+    /**
+     * @param string $name
+     * @param mixed|null $defaultValue
+     * @return mixed
+     */
+    public function getParameter($name, $defaultValue = null);
 
     /**
      * @return array
