@@ -1,57 +1,57 @@
 (function($) {
   // ParameterBag
-  var ParameterBag = function(parameters) {
+  var ParameterBag = function (parameters) {
     parameters = parameters || {};
 
     this.parameters = parameters;
   };
 
   ParameterBag.prototype = {
-    all: function() {
+    all: function () {
       return this.parameters;
     },
 
-    keys: function() {
+    keys: function () {
       var parameters = [];
 
-      $.each(this.parameters, function(i, parameter) {
+      $.each(this.parameters, function (i, parameter) {
         parameters.push(parameter);
       });
 
       return parameters;
     },
 
-    replace: function(parameters) {
+    replace: function (parameters) {
       parameters = parameters || {};
       this.parameters = parameters;
 
       return this;
     },
 
-    add: function(parameters) {
+    add: function (parameters) {
       parameters = parameters || {};
       $.extend(this.parameters, parameters);
 
       return this;
     },
 
-    get: function(name, defaultValue) {
+    get: function (name, defaultValue) {
       defaultValue = defaultValue || null;
 
       return this.has(name) ? this.parameters[name] : defaultValue;
     },
 
-    set: function(key, value) {
+    set: function (key, value) {
       this.parameters[key] = value;
 
       return this;
     },
 
-    has: function(key) {
+    has: function (key) {
       return this.parameters.hasOwnProperty(key);
     },
 
-    remove: function(key) {
+    remove: function (key) {
       delete this.parameters[key];
 
       return this;
@@ -60,16 +60,16 @@
 
   ParameterBag.prototype.fn = ParameterBag.prototype;
 
-  var ServiceContainer = function() {
+  var ServiceContainer = function () {
     this.services = {};
   };
 
   ServiceContainer.prototype = {
-    has: function(id) {
+    has: function (id) {
       return this.services.hasOwnProperty(id);
     },
 
-    get: function(id) {
+    get: function (id) {
       if (!this.has(id)) {
         // error
       }
@@ -77,7 +77,7 @@
       return this.services[id];
     },
 
-    set: function(id, service) {
+    set: function (id, service) {
       this.services[id] = service;
 
       return this;
@@ -87,49 +87,49 @@
   ServiceContainer.prototype.fn = ServiceContainer.prototype;
 
   // AjaxData
-  var AjaxData = function(data) {
+  var AjaxData = function (data) {
     this.data = data;
   };
 
   AjaxData.prototype = {
-    has: function(name) {
+    has: function (name) {
       return this.data.hasOwnProperty(name);
     },
 
-    get: function(name, defaultValue) {
+    get: function (name, defaultValue) {
       defaultValue = defaultValue || null;
 
       return this.has(name) ? this.data[name] : defaultValue;
     },
 
-    all: function() {
+    all: function () {
       return this.data;
     }
   };
 
   // AjaxDataBag
-  var AjaxDataBag = function() {
+  var AjaxDataBag = function () {
     this.requests = {};
   };
 
   AjaxDataBag.prototype = {
-    add: function(id, data) {
+    add: function (id, data) {
       this.requests[id] = new AjaxData(data);
 
       return this.requests[id];
     },
 
-    has: function(id) {
+    has: function (id) {
       return this.requests.hasOwnProperty(id);
     },
 
-    get: function(id, defaultValue) {
+    get: function (id, defaultValue) {
       defaultValue = defaultValue || null;
 
       return this.has(id) ? this.requests[id] : defaultValue;
     },
 
-    remove: function(id) {
+    remove: function (id) {
       delete this.requests[id];
 
       return this;
@@ -139,14 +139,14 @@
   AjaxDataBag.prototype.fn = AjaxDataBag.prototype;
 
   // SF
-  var SF = function() {
+  var SF = function () {
     this.services = new ServiceContainer();
   };
 
   SF.prototype = {
     parameters: new ParameterBag(),
     ajaxRequests: new AjaxDataBag(),
-    ajaxParameters: function(jqXHR) {
+    ajaxParameters: function (jqXHR) {
       var id = jqXHR.sfId;
 
       var ajaxData = this.ajaxRequests.get(id);
@@ -156,14 +156,14 @@
     },
     initialize: function () {},
     util: {
-      extend: function(Child, Parent, methods) {
+      extend: function (Child, Parent, methods) {
         methods = methods || {};
 
         Child.prototype = Object.create(Parent.prototype);
         Child.prototype.constructor = Child;
         Child.superclass = Parent.prototype;
 
-        $.each(methods, function(name, method) {
+        $.each(methods, function (name, method) {
           Child.prototype[name] = method;
         });
 
@@ -171,7 +171,7 @@
       }
     },
     callbacks: {
-      convert: function(response) {
+      convert: function (response) {
         var parentArguments = arguments.callee.caller.arguments;
 
         var jqXHR = parentArguments[2];
@@ -186,7 +186,7 @@
           headers[match[1].toLowerCase()] = match[2];
         }
 
-        $.each(headers, function(name, value) {
+        $.each(headers, function (name, value) {
           name = name.replace(/-+/g, '_');
 
           headerData[name] = $.parseJSON(value);
@@ -208,7 +208,7 @@
           }
         }
         var bodyData = {};
-        $.each(rawBodyData, function(name, value) {
+        $.each(rawBodyData, function (name, value) {
           name = name.replace(/^_sf_/, '');
 
           bodyData[name] = value;
@@ -240,7 +240,7 @@
    * @param {function} callback The callback that will be invoked if route match
    * @param {bool} ajax Specify does this method will be called either with AJAX response.
    */
-  SF.prototype.on = function(routeName, callback, ajax) {
+  SF.prototype.on = function (routeName, callback, ajax) {
     ajax = ajax || false;
     routeName = '*' === routeName ? '.+' : routeName;
 
@@ -263,16 +263,16 @@
    * @param {string} routeName
    * @param {bool} ajax
    */
-  SF.prototype.trigger = function(routeName, ajax) {
+  SF.prototype.trigger = function (routeName, ajax) {
     ajax = ajax || false;
-    $.each(this.routeCallbacks, function(name, callbacks) {
+    $.each(this.routeCallbacks, function (name, callbacks) {
       var routeNames = name.split(' ');
 
-      $.each(routeNames, function(key, value) {
+      $.each(routeNames, function (key, value) {
         var regExp = new RegExp(value);
 
         if (regExp.test(routeName)) {
-          $.each(callbacks, function(index, callbackData) {
+          $.each(callbacks, function (index, callbackData) {
             if (callbackData.ajax || (!callbackData.ajax && !ajax)) {
               callbackData.callback.apply(window, [routeName]);
             }
@@ -286,11 +286,11 @@
    * Add aliases for FOSJsRoutingBundle Routing.generate method
    */
   if ('undefined' !== typeof window['Routing']) {
-    SF.prototype.path = function(route, parameters) {
+    SF.prototype.path = function (route, parameters) {
       return Routing.generate(route, parameters, false);
     };
 
-    SF.prototype.url = function(route, parameters) {
+    SF.prototype.url = function (route, parameters) {
       return Routing.generate(route, parameters, true);
     };
   }
@@ -332,7 +332,7 @@
         _SF.ajaxRequests.remove(id);
       }
     })
-    .on('ite-pre-ajax-complete', function(e, data) {
+    .on('ite-pre-ajax-complete', function (e, data) {
       if (data.hasOwnProperty('redirect')) {
         window.location.href = data['redirect'];
       }
@@ -340,7 +340,7 @@
         _SF.parameters.add(data['parameters']);
       }
     })
-    .on('ite-post-ajax-complete', function(e, data) {
+    .on('ite-post-ajax-complete', function (e, data) {
       if (data.hasOwnProperty('route')) {
         _SF.trigger(data['route'], true);
       }
