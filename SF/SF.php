@@ -244,9 +244,12 @@ class SF implements SFInterface
         $this->ajaxDataBag
             ->addHeaderData('parameters', $this->parameters->all())
             ->addHeaderData('route', $request->attributes->get('_route'))
-            ->addHeaderData('ajax_parameters', $this->ajaxParameters->getHeaderData(), true)
-            ->addBodyData('ajax_parameters', $this->ajaxParameters->getBodyData(), true)
+            ->addHeaderData('ajax_parameters', $this->ajaxParameters->getHeaderData())
         ;
+        if ($this->ajaxParameters->bodyDataCount()) {
+            $this->ajaxDataBag->addBodyData('ajax_parameters', $this->ajaxParameters->getBodyData(), true);
+        }
+
         if (in_array($response->getStatusCode(), [301, 302, 303, 305, 307])) {
             $this->ajaxDataBag->addHeaderData('redirect', $response->headers->get('Location'));
             $response->headers->remove('Location');
