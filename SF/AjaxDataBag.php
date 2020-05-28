@@ -38,13 +38,14 @@ class AjaxDataBag
     /**
      * @param string $name
      * @param mixed $value
+     * @param bool $force
      * @return $this
      */
-    public function addHeaderData($name, $value)
+    public function addHeaderData($name, $value, bool $force = false)
     {
         $name = Inflector::underscore($name);
-        if ($this->hasData($name)) {
-            throw new \RuntimeException(sprintf('Key "%s" already exists'));
+        if ($this->hasData($name) && !$force) {
+            throw new \RuntimeException(sprintf('Key "%s" already exists', $name));
         }
 
         $this->headerData[$name] = $value;
@@ -80,13 +81,14 @@ class AjaxDataBag
     /**
      * @param string $name
      * @param mixed $value
+     * @param bool $force
      * @return $this
      */
-    public function addBodyData($name, $value)
+    public function addBodyData($name, $value, bool $force = false)
     {
         $name = Inflector::underscore($name);
-        if ($this->hasData($name)) {
-            throw new \RuntimeException(sprintf('Key "%s" already exists'));
+        if ($this->hasData($name) && !$force) {
+            throw new \RuntimeException(sprintf('Key "%s" already exists', $name));
         }
 
         $this->bodyData[$name] = $value;

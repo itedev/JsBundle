@@ -25,7 +25,7 @@ class SF implements SFInterface
     public $parameters;
 
     /**
-     * @var ParameterBag
+     * @var AjaxParameterBag
      */
     public $ajaxParameters;
 
@@ -51,7 +51,7 @@ class SF implements SFInterface
     {
         $this->container = $container;
         $this->parameters = new ParameterBag();
-        $this->ajaxParameters = new ParameterBag();
+        $this->ajaxParameters = new AjaxParameterBag();
         $this->ajaxDataBag = new AjaxDataBag();
     }
 
@@ -243,8 +243,9 @@ class SF implements SFInterface
 
         $this->ajaxDataBag
             ->addHeaderData('parameters', $this->parameters->all())
-            ->addHeaderData('ajax_parameters', $this->ajaxParameters->all())
             ->addHeaderData('route', $request->attributes->get('_route'))
+            ->addHeaderData('ajax_parameters', $this->ajaxParameters->getHeaderData(), true)
+            ->addBodyData('ajax_parameters', $this->ajaxParameters->getBodyData(), true)
         ;
         if (in_array($response->getStatusCode(), [301, 302, 303, 305, 307])) {
             $this->ajaxDataBag->addHeaderData('redirect', $response->headers->get('Location'));
