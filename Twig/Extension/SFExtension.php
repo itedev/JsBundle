@@ -45,7 +45,7 @@ class SFExtension extends Twig_Extension
         ];
     }
 
-    public function dump(bool $defer = false, bool $async = false): srting
+    public function dump(bool $defer = false, bool $async = false): string
     {
         return $this->sf->dump($defer, $async);
     }
