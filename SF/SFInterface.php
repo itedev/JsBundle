@@ -78,7 +78,7 @@ interface SFInterface
     /**
      * @return string
      */
-    public function dump();
+    public function dump(bool $defer = false, bool $async = false): string;
 
     /**
      * @param GetResponseForControllerResultEvent $event

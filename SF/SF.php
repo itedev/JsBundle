@@ -180,14 +180,11 @@ class SF implements SFInterface
         return $javascripts;
     }
 
-    /**
-     * @return string
-     */
-    public function dump()
+    public function dump(bool $defer = false, bool $async = false): string
     {
         $this->initializeParameters();
 
-        $dump = '';
+        $dump = '/*<![CDATA[*/ ';
         $dump .= 'SF.parameters.add(' . json_encode($this->parameters->all()) . ');';
 
         foreach ($this->extensions as $extension) {
@@ -195,7 +192,11 @@ class SF implements SFInterface
             $dump .= $extension->dump();
         }
 
-        $dump = '<script>/*<![CDATA[*/ ' . $dump . ' /*]]>*/</script>';
+        $dump .= ' /*]]>*/';
+
+        $dump = base64_encode($dump);
+
+        $dump = '<script' . ($defer ? ' defer' : '') . ($async ? ' async' : '') . ' src="data:text/javascript;base64,' . $dump . '"></script>';
 
         return $dump;
     }
