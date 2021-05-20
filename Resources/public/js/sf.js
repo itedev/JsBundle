@@ -334,7 +334,11 @@
     })
     .on('ite-pre-ajax-complete', function (e, data) {
       if (data.hasOwnProperty('redirect')) {
-        window.location.href = data['redirect'];
+        if (window.location.href.substr(-data['redirect'].length) !== data['redirect']) {
+          window.location.href = data['redirect'];
+        } else {
+          window.location.reload();
+        }
       }
       if (data.hasOwnProperty('parameters')) {
         _SF.parameters.add(data['parameters']);
