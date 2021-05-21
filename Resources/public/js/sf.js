@@ -334,7 +334,7 @@
     })
     .on('ite-pre-ajax-complete', function (e, data) {
       if (data.hasOwnProperty('redirect')) {
-        if (window.location.href.substr(-data['redirect'].length) !== data['redirect']) {
+        if (window.location.origin + data['redirect'] !== window.location.href) {
           window.location.href = data['redirect'];
         } else {
           window.location.reload();
