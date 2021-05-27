@@ -334,9 +334,11 @@
     })
     .on('ite-pre-ajax-complete', function (e, data) {
       if (data.hasOwnProperty('redirect')) {
-        if (window.location.origin + data['redirect'] !== window.location.href) {
-          window.location.href = data['redirect'];
-        } else {
+        let currentUrl = window.location.href.replace(/#.*$/, '');
+        let redirectUrl = data['redirect'].replace(/#.*$/, '');
+
+        window.location.href = data['redirect'];
+        if (window.location.origin + redirectUrl === currentUrl) {
           window.location.reload();
         }
       }
