@@ -194,9 +194,9 @@ class SF implements SFInterface
 
         $dump .= ' /*]]>*/';
 
-        $dump = base64_encode($dump);
+        // $dump = base64_encode($dump);
 
-        $dump = '<script' . ($defer ? ' defer' : '') . ($async ? ' async' : '') . ' src="data:text/javascript;base64,' . $dump . '"></script>';
+        $dump = '<script' . ($defer ? ' defer' : '') . ($async ? ' async' : '') . ' id="_sf_javascripts" type="application/json">' . $dump . '</script>';
 
         return $dump;
     }
